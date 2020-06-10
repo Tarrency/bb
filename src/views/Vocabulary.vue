@@ -15,64 +15,125 @@
                 <div >
                 <el-row>                    
                     <el-col :span="8" style="float:left;text-align:left">
-                        <el-radio-group  v-model="radio1">
-                        <el-radio-button label="上海"></el-radio-button>
-                        <el-radio-button label="北京"></el-radio-button>
-                        <el-radio-button label="广州"></el-radio-button>
+                        <el-radio-group v-model="vocabularyid" @change="getWordInfo">
+                        <el-radio-button v-for="value in vocabulary" :key="value.id" :label="value.id"> 
+                            {{value.name}}
+                        </el-radio-button>
                         </el-radio-group>
                     </el-col>
                     <el-col :span="8" style="float:right;text-align:right">
-                        <el-button type="primary">新增词表</el-button>
-                        <el-button>删除词表</el-button>
+                        <el-button type="primary" @click="VisibleNewDialog=true">新增词表</el-button>
+
+                        <el-button @click="VisibleDelDialog=checkVocaburalyId()">删除词表</el-button>
+
                     </el-col>
                 </el-row>
                 <el-row  style="float:right;">
                     <el-col :span="16">
-                        <el-input placeholder="请输入关键词在此搜索" v-model="input1" size="small" >                            
+                        <el-input placeholder="请输入关键词在此搜索" v-model.trim="searchText" @input="input" size="small" clearable>                            
                         <el-button slot="prepend" >关键词</el-button>
                         </el-input>  
                     </el-col> 
                     <el-col :span="8">
-                        <el-button type="primary" size="small">查询</el-button>
+                        <el-button type="primary" size="small" @click="testinput">查询</el-button>
                         <el-button  size="small">删除</el-button>
                     </el-col>
                 </el-row> 
-                <el-row>
-                    <el-table :data="tableData"  style="width: 100%" >
-                        <el-table-column  type="selection"  width="55">
+                <el-row> 
+                    <!-- 单词表格 -->
+                    <el-table :data="WordTable"  ref="refWordTable" @selection-change="handleSelectionChange" >
+                        <el-table-column  type="selection"  width="55"  label="全选">
                         </el-table-column>
-                        <el-table-column    prop="id"    label="id">
+                        <el-table-column    prop="word_id"    label="id">
                         </el-table-column>
                         <el-table-column    prop="word"    label="词汇">
+                            <template slot-scope="scope"  >
+                               <span v-if="!scope.row.edit"> {{scope.row.word}}</span>
+                               <el-input  v-model="WordsModify" v-else>
+                                    <template slot="append">
+                                        <el-button @click="modifyWord(scope.$index,scope.row)"> 提交</el-button>
+                                    </template>
+                               </el-input>
+                            </template>                                        
                         </el-table-column> 
-                        <el-table-column    prop="updatetime"    label="更新时间">
+                        <el-table-column    prop="word_update_time"  label="更新时间">
+                            <template slot-scope="scope"> {{scope.row.word_update_time| dateFormat}}</template>
                         </el-table-column> 
                         <el-table-column    prop="action"    label="操作">
                             <template slot-scope="scope">
-                            <el-button
-                            size="mini"
-                            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                            <el-button
-                            size="mini"
-                            type="danger"
-                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                        </template>
+                                <el-button size="mini"  @click="modifyWordBtn(scope.$index, scope.row)">编辑</el-button>
+                                <el-button size="mini" type="danger" @click="deleteWordBtn(scope.row)">删除</el-button>
+                            </template>
                         </el-table-column>
                     </el-table>
                 </el-row>
 
                 <el-row>
                     <el-col :span="4" style="float:left;text-align:left">
-                        <el-button style="folat:left" type="primary">全选</el-button>
+                        <el-button style="folat:left" type="primary" @click="selectAll(WordTable)">{{selectAllBtn}}</el-button>
                     </el-col>
                     <el-col :span="12" style="float:right;text-align:right">
-                        <el-button style="folat:right" type="primary">新增</el-button>
-                        <el-button style="folat:right" type="danger" plain>删除</el-button>
+                        <el-button style="folat:right" type="primary" @click="VisibleAddWord= checkVocaburalyId()">新增</el-button>
+                        <el-button style="folat:right" type="danger" plain @click="deleteWordBtn()">删除</el-button>
                         <el-button style="folat:right" type="primary">导入</el-button>
-                        <el-button style="folat:right" type="primary">导出</el-button>
+                        <el-button style="folat:right" type="primary" @click="getExcel(WordTable)">导出</el-button>
                     </el-col>
                 </el-row>
                 </div>
+
+                <!-- 弹出窗口 -->
+                <el-dialog title="新增词表名称" :visible.sync="VisibleNewDialog"  style="width:50%;text-align:center">
+                    <el-form :model="vcbform">
+                        <el-form-item >
+                            <el-input v-model="vcbform.name" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item >
+                            <el-button style="folat:right" type="primary" @click="newVocaburaly">确定</el-button>
+                            <el-button style="folat:right" @click="VisibleNewDialog=false">取消</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-dialog>
+
+                <el-dialog title="删除词表" :visible.sync="VisibleDelDialog"  style="width:50%;text-align:center">
+                    删除不可恢复，您确定要删除词表“
+                    <nobr v-for="v in vocabulary" v-show="v.id == vocabularyid" :key="v.id">{{v.name}}</nobr>                            
+                    ”?<br/>
+                    <el-button style="folat:right" type="primary" @click="delVocaburaly">确定</el-button>
+                    <el-button style="folat:right" @click="VisibleDelDialog = false" >取消</el-button>                               
+                </el-dialog>
+
+                <el-dialog title="新增词汇" :visible.sync="VisibleAddWord" class="dialog">  
+                    <el-form>
+                        <el-form-item label="所属词表：" >
+                            <nobr v-for="v in vocabulary" v-show="v.id == vocabularyid" :key="v.id">{{v.name}}</nobr>
+                        </el-form-item>
+                        <el-form-item label="新增词汇:" >
+                            <el-button type="primary" @click="addinput">继续添加</el-button>                               
+                        </el-form-item>
+                        <el-form-item>
+                            <el-col :span="24" v-for="(word,index) in inputNewWords" :key="index">
+                                <el-row :gutter="20" class="margins">
+                                    <el-col :span="14">
+                                        <el-input v-model="inputNewWords[index]" autocomplete="off" ></el-input>
+                                    </el-col>
+                                    <el-col :span="6">
+                                        <el-button type="danger" plain @click="delinput(index)">删除</el-button>
+                                    </el-col>
+                                </el-row>
+                            </el-col>
+                        </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="addWord">确定</el-button>
+                        <el-button  @click="VisibleAddWord = false" >取消</el-button> 
+                    </el-form-item>
+                    </el-form>      
+                </el-dialog> 
+
+                <el-dialog title="删除单词" :visible.sync="VisibleDelWord"  style="width:50%;text-align:center">
+                    删除不可恢复，您确定要删除单词{{ShowinfoSeleted}}<br/>
+                    <el-button style="folat:right" type="primary" @click="deleteWords">确定</el-button>
+                     <el-button style="folat:right" @click="VisibleDelWord = false" >取消</el-button>                               
+                </el-dialog>
             </el-main>
         </el-container>
     </el-container>
@@ -80,8 +141,209 @@
 </template>
 
 <script>
+let moment = require("moment");
 export default {
-    
+    data(){
+        return{
+            vocabulary : [{id:0,name:''}] , //词表列表
+            vocabularyid :0, //选中词表
+            searchText : '', //搜素关键词
+            WordTable : [] ,//词汇列表
+            VisibleNewDialog :false,
+            VisibleDelDialog :false,
+            VisibleAddWord :false,
+            VisibleDelWord : false,
+            vcbform: { name : ''} ,//新增词汇列表
+            inputNewWords :[""],
+            WordsModify : '', //要
+            RowSeleted : [], //当前选中行
+            IdSeleted :[], //当前选中id集合
+            ShowinfoSeleted : [],//当前选中单词集合
+            selectAllBtn : '全选',
+        };
+    },
+    mounted(){
+        this.getVcabularyInfo()
+    },
+    methods:{
+        //获取词表名称id
+        getVcabularyInfo(){
+        this.axios.post('/vocabulary/getlist',{
+                moduleID : 0
+                // 0:专用词，1：敏感词
+            })
+            .then(resp=>{
+                this.vocabulary = JSON.parse(resp.data.data);
+            }).catch(err=>{
+            });
+        },
+        //获取词语列表
+        getWordInfo(){         
+            this.axios.post('/vocabulary/search',{
+                    vocabulary_id : this.vocabularyid,
+                    key : this.searchText
+                }).then(resp=>{
+                        this.WordTable = JSON.parse(resp.data.data)
+                        this.WordTable.edit = false
+                }).catch(err=>{
+                        console.log('请求失败:'+err.status+','+err.statusText);
+                });
+        },
+        //新增词表  
+        newVocaburaly(){
+            this.axios.post('/vocabulary/addnew',{
+                    name : this.vcbform.name,
+                    type : 0  // 0:专用词，1：敏感词
+                }).then( 
+                    this.getVcabularyInfo,
+                    this.VisibleNewDialog = false
+                )
+                .catch(err=>{
+                        console.log('请求失败:'+err.status+','+err.statusText);
+                });
+        },
+        //检查需要先选中词表的操作
+        checkVocaburalyId (){
+            if(this.vocabularyid > 0){
+                return true
+            }else{
+                this.$msgbox({
+                    type: 'warning',
+                    message: '请先选择词表'
+                })
+                return false
+            }
+        },
+
+        //删除词表
+        delVocaburaly(){
+                this.axios.post('/vocabulary/delete',{
+                    vocabulary_id : this.vocabularyid,
+                }).then(
+                    this.getVcabularyInfo,
+                    this.VisibleDelDialog = false
+                )
+                .catch(err=>{
+                        console.log('请求失败:'+err.status+','+err.statusText);
+                });
+        },
+        //新增词汇
+        addWord(){
+            this.axios.post('/vocabulary/addword',{
+                    vocabulary_id : this.vocabularyid,
+                    words : this.inputNewWords
+                }).then( data=>{
+                    this.VisibleAddWord = false,
+                    this.inputNewWords = [""],
+                    this.getWordInfo()
+                }).catch(err=>{
+                        console.log('请求失败:'+err.status+','+err.statusText);
+                });
+                
+            this.getWordInfo()
+            //getWordInfo
+        },
+        addinput(){
+                    let cope = "";
+                    this.inputNewWords.push(cope);
+        },
+        delinput(index) {
+                    this.inputNewWords.splice(index, 1);
+                },
+        handleSelectionChange(val) {
+            //val 为选中数据的集合
+                this.RowSeleted = val;
+            },
+        //修改词汇
+        modifyWordBtn(index,row){
+            this.WordsModify="";
+            row.edit = !row.edit ;
+            this.$set(this.WordTable,index,this.WordTable[index]);//重新加载本行数据
+        },
+        modifyWord(index,row){
+            console.log('修改单词',row.word_id,':',this.WordsModify)
+            this.axios.post('/vocabulary/modify',{
+                    wordID : row.word_id,
+                    newWord : this.WordsModify
+                }).then(
+                    row.edit = !row.edit ,
+                    row.word = this.WordsModify,
+                    this.WordsModify = ""
+                )
+                .catch(err=>{
+                        console.log('请求失败:'+err.status+','+err.statusText);
+                });
+            this.$set(this.WordTable,index,this.WordTable[index])//重新加载本行数据
+        },
+        //删除词汇
+        deleteWordBtn(row){ 
+            if(row == null) {
+                this.IdSeleted=[]
+                this.ShowinfoSeleted=[]
+                this.RowSeleted.forEach((item,index)=>{
+                    this.IdSeleted=this.IdSeleted.concat(item.word_id)
+                    this.ShowinfoSeleted = this.ShowinfoSeleted.concat(item.word)
+                    this.ShowinfoSeleted.slice(-1)
+                })
+            }else{
+                this.ShowinfoSeleted = '"'+row.word+'"'
+                this.IdSeleted = row.word_id
+            }
+            console.log('删除单词',this.IdSeleted)
+            this.VisibleDelWord = true
+        },
+        deleteWords(){ 
+            this.axios.post('./vocabulary/deleteWords',{
+                wordIDs: this.IdSeleted
+            }).then( data =>{
+                this.RowSeleted = []
+                this.IdSeleted = []
+                this.ShowinfoSeleted = ""
+                this.getWordInfo()
+            }).catch(err=>{
+                    console.log('请求失败:'+err.status+','+err.statusText);
+            });            
+            this.VisibleDelWord = false
+        },
+        //全选词汇
+        selectAll(rows){
+            if(this.selectAllBtn.startsWith('全选')){
+                rows.forEach(row => {
+                    this.$refs.refWordTable.toggleRowSelection(row, true)
+                }) 
+                this.selectAllBtn='取消全选'
+            }else{
+                rows.forEach(row => {
+                    this.$refs.refWordTable.toggleRowSelection(row, false)
+                }) 
+                this.selectAllBtn='全选'
+            }
+            
+        },
+        testinput(){
+            console.log('输入'+this.searchText)
+        },
+
+        input(a){
+            this.searchText=a
+        },
+
+        //导出
+        getExcel(res) {
+            require.ensure([], () => {
+                const { export_json_to_excel } = require('../excel/Export2Excel.js')
+                const tHeader = ['id', '年龄','更新时间']
+                const filterVal = ['word_id', 'word','update_time']
+                const list =  this.RowSeleted
+                const data = this.formatJson(filterVal, list)
+                export_json_to_excel(tHeader, data, '导出列表名称')
+            })
+        },
+
+        formatJson(filterVal, jsonData) {
+            return jsonData.map(v => filterVal.map(j => v[j]))
+        },
+    }
 }
 </script>
 
@@ -94,4 +356,13 @@ export default {
 .el-main{
   border:solid darkgray 1px;
 }
+
+
+.dialog {
+    width:50%;
+    text-align:center;
+    float: center;
+}
+
+
 </style scoped>

@@ -8,14 +8,20 @@ import DialogueStatistics from '../views/DialogueStatistics.vue'
 import OperationLog from '../views/OperationLog.vue';
 import AccountManage from "../views/AccountManage";
 
+import test from '../views/test.vue';
+
 import Left from '../views/Left'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
+import hello from '../views/hello'
 const routes = [
   {
     path: '/',
     redirect: '/dashboard'
+  },{
+    path: '/test',
+    component:test
   },{
     path: '/dashboard',
     name: 'dashboard',
@@ -46,6 +52,10 @@ const routes = [
     path: '/dialogue',
     name: 'dialogue',
     component: DialogueStatistics
+  },{
+    path: '/hello',
+    name: 'hello',
+    component: hello
   }
 ]
 
