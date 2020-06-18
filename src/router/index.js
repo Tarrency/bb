@@ -15,54 +15,53 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 import hello from '../views/hello'
-const routes = [
-  {
-    path: '/',
-    redirect: '/dashboard'
-  },{
-    path: '/test',
-    component:test
-  },{
-    path: '/dashboard',
-    name: 'dashboard',
-    component: DashBoard 
-  },
-  {
-    path: '/logs',
-    name: 'logs',
-    component: OperationLog 
-  },
-  {
-    path: '/userinfo',
-    name: 'userinfo',
-    component: AccountManage 
-  },{
-    path: '/KgManager',
-    name: 'KgManager',
-    component: KgManager
-  },{
-    path: '/agent',
-    name: 'AgentManager',
-    component: AgentManager
-  },{
-    path: '/vocabulary',
-    name: 'Vocabulary',
-    component: Vocabulary
-  },{
-    path: '/dialogue',
-    name: 'dialogue',
-    component: DialogueStatistics
-  },{
-    path: '/hello',
-    name: 'hello',
-    component: hello
-  }
+const routes = [{
+        path: '/',
+        redirect: '/dashboard'
+    }, {
+        path: '/test',
+        component: test
+    }, {
+        path: '/dashboard',
+        name: 'dashboard',
+        component: DashBoard
+    },
+    {
+        path: '/logs',
+        name: 'logs',
+        component: OperationLog
+    },
+    {
+        path: '/userinfo',
+        name: 'userinfo',
+        component: AccountManage
+    }, {
+        path: '/KgManager',
+        name: 'KgManager',
+        component: KgManager
+    }, {
+        path: '/agent',
+        name: 'AgentManager',
+        component: AgentManager
+    }, {
+        path: '/vocabulary',
+        name: 'Vocabulary',
+        component: Vocabulary
+    }, {
+        path: '/dialogue',
+        name: 'dialogue',
+        component: DialogueStatistics
+    }, {
+        path: '/hello',
+        name: 'hello',
+        component: hello
+    }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
 })
 
 export default router
