@@ -99,7 +99,7 @@ export default {
                             index: 'vocabulary',
                             title: '专有词表'
                       },{
-                            index: '',
+                            index: 'SensitiveVocab',
                             title: '敏感词表'
                         
                       }

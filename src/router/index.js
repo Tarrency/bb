@@ -7,6 +7,7 @@ import AgentManager from '../views/AgentManager.vue'
 import DialogueStatistics from '../views/DialogueStatistics.vue'
 import OperationLog from '../views/OperationLog.vue';
 import AccountManage from "../views/AccountManage";
+import SensitiveVocab from '../views/SensitiveVocab.vue'
 
 import test from '../views/test.vue';
 
@@ -55,6 +56,10 @@ const routes = [{
         path: '/hello',
         name: 'hello',
         component: hello
+    }, {
+        path: '/SensitiveVocab',
+        name: 'SensitiveVocab',
+        component: SensitiveVocab
     }
 ]
 
