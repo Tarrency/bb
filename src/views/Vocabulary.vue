@@ -14,31 +14,31 @@
             <el-main style="line-height:80px">
                 <!-- 主要内容区 -->
                 <div>
-                <el-row>                    
-                    <el-col :span="8" style="float:left;text-align:left">
+                <el-row>                   
+                    <el-col :span="8">
                         <el-radio-group v-model="vocabularyid" @change="getWordInfo">
                         <el-radio-button v-for="value in vocabulary" :key="value.id" :label="value.id"> 
                             {{value.name}}
                         </el-radio-button>
                         </el-radio-group>
+                        <!-- <el-input value="1" /> -->
                     </el-col>
                     <el-col :span="8" style="float:right;text-align:right">
                         <el-button type="primary" @click="VisibleNewDialog=true">新增词表</el-button>
 
                         <el-button @click="VisibleDelDialog=checkVocaburalyId()">删除词表</el-button>
-
                     </el-col>
                 </el-row>
-                <el-row  style="float:right;">
-                    <el-col :span="16">
+                <el-row>
+                    <el-col :span="9" :offset="10">
                         <el-input placeholder="请输入关键词在此搜索" v-model.trim="searchText" @input="input" size="small" clearable>                            
                             <el-button slot="prepend" >关键词</el-button>
                         <!--复合型输入框，slot属性可指定是在输入框前面还是后置插入标签或按钮-->
                         </el-input>  
                     </el-col> 
-                    <el-col :span="8">
-                        <el-button type="primary" size="small" @click="testinput">查询</el-button>
-                        <el-button  size="small">删除</el-button>
+                    <el-col :span="5" >
+                        <el-button type="primary" size="small" @click.native="testinput">查询</el-button>
+                        <el-button  size="small" >删除</el-button>
                     </el-col>
                 </el-row> 
                 <el-row> 
@@ -46,7 +46,7 @@
                     <el-table :data="WordTable"  ref="refWordTable" @selection-change="handleSelectionChange" >
                         <el-table-column  type="selection"  width="55"  label="全选">
                         </el-table-column>
-                        <el-table-column    prop="word_id"    label="id">
+                        <el-table-column    prop="id"    label="id">
                         </el-table-column>
                         <el-table-column    prop="word"    label="词汇">
                             <template slot-scope="scope"  >
@@ -77,7 +77,7 @@
                     <el-col :span="12" style="float:right;text-align:right">
                         <el-button style="folat:right" type="primary" @click="VisibleAddWord= checkVocaburalyId()">新增</el-button>
                         <el-button style="folat:right" type="danger" plain @click="deleteWordBtn()">删除</el-button>
-                        <el-button style="folat:right" type="primary">导入</el-button>(
+                        <el-button style="folat:right" type="primary">导入</el-button>
                         <el-button style="folat:right" type="primary" @click="getExcel(WordTable)">导出</el-button>
                     </el-col>
                 </el-row>
@@ -195,13 +195,9 @@ export default {
         //新增词表  
         newVocaburaly(){
             
-            this.axios.post('/vocabulary/addnew?name='+this.vcbform.name+'&type=0'
-            //,{
-                  //  name: this.vcbform.name,
-                   // type :0 }
+            this.axios.post('/vocabulary/addnew?name='+this.vcbform.name+'&type=0'           
                     //name: this.vcbform.name,
                     //type : 0 // 0:专用词，1：敏感词
-                    //{headers:{'Content-Type':'application/x-www-form-urlencoded'}}
                 ).then( 
                     this.getVcabularyInfo,
                     this.VisibleNewDialog = false
@@ -236,8 +232,8 @@ export default {
         },
         //新增词汇
         addWord(){
-            this.axios.post('/vocabulary/addword?id='+this.vocabularyid+"&words="+this.inputNewWords
-            //,{
+            this.axios.post('/vocabulary/addword?id='+this.vocabularyid
+                    +"&words="+this.inputNewWords
                    // id : this.vocabularyid,
                    // words : this.inputNewWords
                 ).then( data=>{
@@ -260,6 +256,7 @@ export default {
                 },
         handleSelectionChange(val) {
             //val 为选中数据的集合
+            console.log(val)
                 this.RowSeleted = val;
             },
         //修改词汇
@@ -269,9 +266,9 @@ export default {
             this.$set(this.WordTable,index,this.WordTable[index]);//重新加载本行数据
         },
         modifyWord(index,row){
-            console.log('修改单词',row.word_id,':',this.WordsModify)
+            console.log('修改单词',row.id,':',this.WordsModify)
             this.axios.post('/vocabulary/modify',{
-                    wordID : row.word_id,
+                    wordID : row.id,
                     newWord : this.WordsModify
                 }).then(
                     row.edit = !row.edit ,
@@ -286,11 +283,11 @@ export default {
         //删除词汇
         deleteWordBtn(row){ 
             console.log('row',row)
-            if(row == null) {
+            if(!row) {
                 this.IdSeleted=[]
                 this.ShowinfoSeleted=[]
                 this.RowSeleted.forEach((item,index)=>{
-                    this.IdSeleted=this.IdSeleted.concat(item.word_id)
+                    this.IdSeleted=this.IdSeleted.concat(item.id)
                     this.ShowinfoSeleted = this.ShowinfoSeleted.concat(item.word)
                     this.ShowinfoSeleted.slice(-1)
                 })
@@ -301,10 +298,9 @@ export default {
             console.log('删除单词',this.IdSeleted)
             this.VisibleDelWord = true
         },
-        deleteWords(){ 
-            this.axios.delete('./vocabulary/deleteWords?wordIDs='+this.IdSeleted.join(','),
-            //+this.IdSeleted
-            // {wordIDs: this.IdSeleted.join(',')}
+        deleteWords(){
+            this.axios.delete('./vocabulary/deleteWords?wordIDs='+this.IdSeleted.join(',')
+                     //+this.IdSeleted.join(','),         
             ).then( data =>{
                 this.RowSeleted = []
                 this.IdSeleted = []
@@ -343,8 +339,8 @@ export default {
         getExcel(res) {
             require.ensure([], () => {
                 const { export_json_to_excel } = require('../excel/Export2Excel.js')
-                const tHeader = ['id', '词汇','更新时间']  //这里是词汇吧
-                const filterVal = ['word_id', 'word','update_time']
+                const tHeader = ['id', '词汇','更新时间']  
+                const filterVal = ['id', 'word','update_time']
                 const list =  this.RowSeleted
                 const data = this.formatJson(filterVal, list)
                 export_json_to_excel(tHeader, data, '导出列表名称')

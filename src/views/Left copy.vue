@@ -15,10 +15,16 @@
         <i class="el-icon-menu"></i>
         <span slot="title">首页</span>
       </el-menu-item>
-      <el-menu-item index="2">
-        <i class="el-icon-edit"></i>
-        <span slot="title">QA知识管理</span>
-      </el-menu-item>
+      <el-submenu index="2">
+         <template slot="title">
+          <i class="el-icon-edit"></i>
+          <span>QA知识管理</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="2-1">知识浏览/编辑/导入/导出</el-menu-item>
+          <el-menu-item index="2-2">知识导入</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
 
       <el-submenu index="3">
         <template slot="title">

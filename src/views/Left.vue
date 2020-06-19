@@ -73,8 +73,18 @@ export default {
                 },
                 {
                     icon: 'el-icon-edit',
-                    index: '',//暂时没有这个页面
-                    title: 'QA知识管理'
+                    index: 'QA',
+                    title: 'QA知识管理',
+                     subs:[
+                      {
+                            index: 'QAmanager',
+                            title: '知识浏览/编辑/导入/导出'
+                      },{
+                            index: 'QAimport',
+                            title: '知识导入'
+                        
+                      }
+                    ]
                 },
                 {
                     icon: 'el-icon-coin',

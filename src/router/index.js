@@ -5,9 +5,11 @@ import KgManager from '../views/KgManager'
 import Vocabulary from '../views/Vocabulary.vue'
 import AgentManager from '../views/AgentManager.vue'
 import DialogueStatistics from '../views/DialogueStatistics.vue'
-import OperationLog from '../views/OperationLog.vue';
-import AccountManage from "../views/AccountManage";
+import OperationLog from '../views/OperationLog.vue'
+import AccountManage from "../views/AccountManage"
 import SensitiveVocab from '../views/SensitiveVocab.vue'
+import QAmanager from '../views/QAmanager.vue'
+import QAimport from '../views/QAimport.vue'
 
 import test from '../views/test.vue';
 
@@ -60,6 +62,14 @@ const routes = [{
         path: '/SensitiveVocab',
         name: 'SensitiveVocab',
         component: SensitiveVocab
+    }, {
+        path: '/QAmanager',
+        name: 'QAmanager',
+        component: QAmanager
+    }, {
+        path: '/QAimport',
+        name: 'QAimport',
+        component: QAimport
     }
 ]
 
