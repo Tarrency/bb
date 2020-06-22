@@ -8,7 +8,6 @@
                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                 <el-breadcrumb-item>QA知识管理</el-breadcrumb-item>
                 </el-breadcrumb>
-               
             </el-header>
             <el-main style="line-height:80px">
                 <!-- 主要内容区 -->
@@ -86,7 +85,7 @@
                     <el-col :span="12" style="float:right;text-align:right">
                         <el-button style="folat:right" type="primary" size="small" @click="VisibleAddWord= checkVocaburalyId()">逐条新增</el-button>
                         <el-button style="folat:right" type="danger" plain size="small" @click="deleteWordBtn()">删除</el-button>
-                        <el-button style="folat:right" type="primary" size="small">批量导入</el-button>
+                        <el-button style="folat:right" type="primary" size="small" @click="bntClick">批量导入</el-button>
                         <el-button style="folat:right" type="primary" size="small" @click="getExcel(WordTable)">导出</el-button>
                     </el-col>
                 </el-row>
@@ -94,7 +93,7 @@
 
                 <!-- 弹出窗口 -->
                 <!--新增词表按钮-->
-                <el-dialog title="新增词表名称" :visible.sync="VisibleNewDialog"  style="width:50%;text-align:center">
+                <el-dialog title="新增问答库名称" :visible.sync="VisibleNewDialog"  style="width:50%;text-align:center">
                     <el-form :model="vcbform">
                         <el-form-item >
                             <el-input v-model="vcbform.name" autocomplete="off"></el-input>
@@ -341,6 +340,9 @@ export default {
         input(a){
             this.searchText=a
            
+        },
+        bntClick(){
+            this.$router.push('/QAimport')
         },
 
         //导出

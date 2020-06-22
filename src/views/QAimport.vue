@@ -14,6 +14,15 @@
             <el-main style="line-height:80px">
                 <!-- 主要内容区 -->
                 <div>
+                    <el-row>
+                        <el-col :offset="6">
+                            <el-upload class="upload-demo" drag action="https://jsonplaceholder.typicode.com/posts/" multiple>
+                            <i class="el-icon-upload"></i>
+                            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                            <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
+                        </el-upload>
+                        </el-col>
+                    </el-row>
                 <el-row> 
                     <!-- 单词表格 -->
                     <el-table :data="WordTable"  ref="refWordTable" @selection-change="handleSelectionChange" >
@@ -57,7 +66,7 @@
                     <el-col :span="12" style="float:right;text-align:right">
                         <el-button style="folat:right" type="primary" size="small">导入</el-button>
                          <el-button style="folat:right" type="danger" plain size="small" @click="deleteWordBtn()">删除</el-button>
-                        <el-button style="folat:right" type="primary" size="small" @click="getExcel(WordTable)">返回</el-button>
+                        <el-button style="folat:right" type="primary" size="small" @click="back">返回</el-button>
                     </el-col>
                 </el-row>
                 </div>
@@ -291,6 +300,9 @@ export default {
         input(a){
             this.searchText=a
            
+        },
+        back(){
+            this.$router.push('/QAmanager')
         },
 
         //导出

@@ -10,6 +10,8 @@ import AccountManage from "../views/AccountManage"
 import SensitiveVocab from '../views/SensitiveVocab.vue'
 import QAmanager from '../views/QAmanager.vue'
 import QAimport from '../views/QAimport.vue'
+import uploadExcel from '../views/uploadExcel.vue'
+
 
 import test from '../views/test.vue';
 
@@ -70,6 +72,10 @@ const routes = [{
         path: '/QAimport',
         name: 'QAimport',
         component: QAimport
+    }, {
+        path: '/uploadExcel',
+        name: 'uploadExcel',
+        component: uploadExcel
     }
 ]
 
