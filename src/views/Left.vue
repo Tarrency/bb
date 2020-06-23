@@ -79,10 +79,6 @@ export default {
                       {
                             index: 'QAmanager',
                             title: '知识浏览/编辑/导入/导出'
-                      },{
-                            index: 'QAimport',
-                            title: '知识导入'
-                        
                       }
                     ]
                 },

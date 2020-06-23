@@ -13,7 +13,8 @@
           <!-- 主要内容区 -->
           <div>
             <el-row>
-              <el-col :span="8">
+              <el-col :span="3" style="float:left" ><span>词表名称</span></el-col>
+              <el-col :span="8" style="float:left">
                 <el-radio-group v-model="vocabularyid" @change="getWordInfo">
                   <el-radio-button
                     v-for="value in vocabulary"
@@ -77,34 +78,26 @@
                 </el-table-column>
               </el-table>
             </el-row>
-
             <el-row>
               <el-col :span="4" style="float:left;text-align:left">
                 <el-button
-                  style="folat:left"
                   type="primary"
                   @click="selectAll(WordTable)"
                 >{{selectAllBtn}}</el-button>
               </el-col>
               <el-col :span="12" style="float:right;text-align:right">
                 <el-button
-                  style="folat:right"
                   type="primary"
                   @click="VisibleAddWord= checkVocaburalyId()"
                 >新增</el-button>
-                <el-button style="folat:right" type="danger" plain @click="deleteWordBtn()">删除</el-button>
+                <el-button  type="danger" plain @click="deleteWordBtn()">删除</el-button>
                 <!-- =================== -->
-                <div style="display:inline-block;margin:0 10px">
-                  <el-upload action :before-upload="handleBeforeUpload" accept=".xls, .xlsx">
-                    <el-button type="primary" :loading="uploadLoading" @click="handleUploadFile">导入</el-button>
-                  </el-upload>
-                </div>
+                <el-button type="primary"  @click="VisibleAddWords= checkVocaburalyId()">导入</el-button>
                 <!-- ============================= -->
-                <el-button style="folat:right" type="primary" @click="getExcel(WordTable)">导出</el-button>
+                <el-button type="primary" @click="getExcel(WordTable)">导出</el-button>
               </el-col>
             </el-row>
           </div>
-
           <!-- 弹出窗口 -->
           <!--新增词表按钮-->
           <el-dialog
@@ -117,8 +110,8 @@
                 <el-input v-model="vcbform.name" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button style="folat:right" type="primary" @click="newVocaburaly">确定</el-button>
-                <el-button style="folat:right" @click="VisibleNewDialog=false">取消</el-button>
+                <el-button type="primary" @click="newVocaburaly">确定</el-button>
+                <el-button  @click="VisibleNewDialog=false">取消</el-button>
               </el-form-item>
             </el-form>
           </el-dialog>
@@ -136,8 +129,8 @@
             >{{v.name}}</nobr>
             ”?
             <br />
-            <el-button style="folat:right" type="primary" @click="delVocaburaly">确定</el-button>
-            <el-button style="folat:right" @click="VisibleDelDialog = false">取消</el-button>
+            <el-button style="float:right" type="primary" @click="delVocaburaly">确定</el-button>
+            <el-button style="float:right" @click="VisibleDelDialog = false">取消</el-button>
           </el-dialog>
           <!--新增按钮-->
           <el-dialog title="新增词汇" :visible.sync="VisibleAddWord" class="dialog">
@@ -166,16 +159,26 @@
               </el-form-item>
             </el-form>
           </el-dialog>
+          <!--导入弹框-->
+          <el-dialog title="导入词汇" :visible.sync="VisibleAddWords" class="dialog">
+             <el-form>
+              <el-form-item label="所属词表：">
+                <nobr v-for="v in vocabulary" v-show="v.id == vocabularyid" :key="v.id">{{v.name}}</nobr>
+              </el-form-item>
+              <el-form-item>
+                <el-upload action :before-upload="handleBeforeUpload" accept=".xls, .xlsx">
+                    <el-button type="primary"  :loading="uploadLoading" @click="handleUploadFile">确定</el-button>
+                </el-upload>
+                <el-button @click="VisibleAddWords = false">取消</el-button>
+              </el-form-item>
+             </el-form>
+          </el-dialog>
           <!--删除按钮-->
-          <el-dialog
-            title="删除单词"
-            :visible.sync="VisibleDelWord"
-            style="width:50%;text-align:center"
-          >
+          <el-dialog title="删除单词" :visible.sync="VisibleDelWord"
+            style="width:50%;text-align:center">
             删除不可恢复，您确定要删除单词{{ShowinfoSeleted}}
-            <br />
-            <el-button style="folat:right" type="primary" @click="deleteWords">确定</el-button>
-            <el-button style="folat:right" @click="VisibleDelWord = false">取消</el-button>
+            <el-button  type="primary" @click="deleteWords">确定</el-button>
+            <el-button  @click="VisibleDelWord = false">取消</el-button>
           </el-dialog>
         </el-main>
       </el-container>
@@ -196,7 +199,10 @@ export default {
       VisibleNewDialog: false,
       VisibleDelDialog: false,
       VisibleAddWord: false,
-      vcbform: { name: "" }, //新增词汇列表
+      //================
+      VisibleAddWords: false,
+      //===========
+      vcbform: { name: "" }, //新增词表
       inputNewWords: [""],
       VisibleDelWord: false,
       WordsModify: "", //要
@@ -213,9 +219,8 @@ export default {
       tableLoading: false
     };
   },
-  mounted() {
+  mounted() {//钩子函数
     this.getVcabularyInfo();
-    this.getWordInfo();
   },
   methods: {
     //获取词表名称id
@@ -314,7 +319,6 @@ export default {
     },
     handleSelectionChange(val) {
       //val 为选中数据的集合
-      console.log(val);
       this.RowSeleted = val;
     },
     //修改词汇
@@ -421,6 +425,7 @@ export default {
     },
     handleUploadFile() {
       this.initUpload();
+      this.getWordInfo();
     },
     handleRemove() {
       this.initUpload();
@@ -470,6 +475,8 @@ export default {
         this.tableLoading = false;
         this.showRemoveFile = true;
         this.WordTable = [...this.WordTable, ...results];
+        //====================
+        this.VisibleAddWords = false;
       };
     }
   }

@@ -22,24 +22,11 @@
             ></i>
           </div>
         </el-row>
-        <el-row>
-          <!-- <transition name="el-fade-in">
-          <el-progress v-if="showProgress" :percent="progressPercent" :stroke-width="2">
-            <div v-if="progressPercent == 100">
-              <i type="ios-checkmark-circle"></i>
-              <span>成功</span>
-            </div>
-          </el-progress>
-          </transition>-->
-        </el-row>
       </el-head>
       <el-main>
         <el-row>
           <el-table :data="tableData" :loading="tableLoading">
-
-            <!-- <el-table-column prop="词汇" label="词汇"></el-table-column> -->
             <el-table-column v-for="(item,i) of tableTitle" :key="i" :prop="item.key" :label="item.title"></el-table-column>
-
           </el-table>
         </el-row>
       </el-main>

@@ -9,7 +9,7 @@ import OperationLog from '../views/OperationLog.vue'
 import AccountManage from "../views/AccountManage"
 import SensitiveVocab from '../views/SensitiveVocab.vue'
 import QAmanager from '../views/QAmanager.vue'
-import QAimport from '../views/QAimport.vue'
+//import QAimport from '../views/QAimport.vue'
 import uploadExcel from '../views/uploadExcel.vue'
 
 
@@ -68,10 +68,6 @@ const routes = [{
         path: '/QAmanager',
         name: 'QAmanager',
         component: QAmanager
-    }, {
-        path: '/QAimport',
-        name: 'QAimport',
-        component: QAimport
     }, {
         path: '/uploadExcel',
         name: 'uploadExcel',

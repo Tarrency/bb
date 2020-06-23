@@ -22,7 +22,6 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="2-1">知识浏览/编辑/导入/导出</el-menu-item>
-          <el-menu-item index="2-2">知识导入</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
 
