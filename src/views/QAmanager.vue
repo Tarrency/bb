@@ -33,13 +33,9 @@
             </el-row>
             <el-row>
               <el-col :span="9" :offset="10">
-                <el-input
-                  placeholder="请输入关键词在此搜索"
-                  v-model.trim="searchText"
-                  @input="input"
+                <el-input placeholder="请输入关键词在此搜索" v-model.trim="searchText" @input="input"
                   size="small"
-                  clearable
-                >
+                  clearable>
                   <el-button slot="prepend">关键词</el-button>
                   <!--复合型输入框，slot属性可指定是在输入框前面还是后置插入标签或按钮-->
                 </el-input>
@@ -58,29 +54,34 @@
               >
                 <el-table-column type="selection" width="55" label="全选"></el-table-column>
                 <el-table-column prop="id" label="id"></el-table-column>
-                <el-table-column prop="word" label="问题">
+                <el-table-column prop="question" label="问题">
                   <template slot-scope="scope">
-                    <span v-if="!scope.row.edit">{{scope.row.word}}</span>
+                    <span v-if="!scope.row.edit">{{scope.row.quetion}}</span>
                     <el-input v-model="WordsModify" v-else>
                       <template slot="append">
-                        <el-button @click="modifyWord(scope.$index,scope.row)">提交</el-button>
+                        <el-button @click="modifyQuestion(scope.$index,scope.row)">提交</el-button>
                       </template>
                     </el-input>
                   </template>
                 </el-table-column>
-                <el-table-column prop="word" label="回答">
+                <el-table-column prop="answer" label="回答">
                   <template slot-scope="scope">
-                    <span v-if="!scope.row.edit">{{scope.row.word}}</span>
+                    <span v-if="!scope.row.edit">{{scope.row.answer}}</span>
                     <el-input v-model="WordsModify" v-else>
                       <template slot="append">
-                        <el-button @click="modifyWord(scope.$index,scope.row)">提交</el-button>
+                        <el-button @click="modifyAnswer(scope.$index,scope.row)">提交</el-button>
                       </template>
                     </el-input>
                   </template>
                 </el-table-column>
-                 <el-table-column prop="word" label="类型">
+                 <el-table-column prop="type" label="类型">
                   <template slot-scope="scope">
-                    <span v-if="!scope.row.edit">{{scope.row.word}}</span>
+                    <span v-if="!scope.row.edit">{{scope.row.type}}</span>
+                     <el-input v-model="WordsModify" v-else>
+                      <template slot="append">
+                        <el-button @click="modifyType(scope.$index,scope.row)">提交</el-button>
+                      </template>
+                    </el-input>
                   </template>
                 </el-table-column>
                 <el-table-column prop="word_update_time" label="更新时间">
@@ -128,8 +129,8 @@
                 <el-input v-model="vcbform.name" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button style="float:right" type="primary" @click="newVocaburaly">确定</el-button>
-                <el-button style="float:right" @click="VisibleNewDialog=false">取消</el-button>
+                <el-button  type="primary" @click="newVocaburaly">确定</el-button>
+                <el-button  @click="VisibleNewDialog=false">取消</el-button>
               </el-form-item>
             </el-form>
           </el-dialog>
@@ -150,20 +151,17 @@
             <el-button style="float:right" type="primary" @click="delVocaburaly">确定</el-button>
             <el-button style="float:right" @click="VisibleDelDialog = false">取消</el-button>
           </el-dialog>
-          <!--新增按钮-->
+          <!--逐条新增按钮-->
           <el-dialog title="新增问答" :visible.sync="VisibleAddWord" class="dialog">
             <el-form>
               <el-form-item label="所属问答库：">
                 <nobr v-for="v in vocabulary" v-show="v.id == vocabularyid" :key="v.id">{{v.name}}</nobr>
               </el-form-item>
               <el-form-item label="新增问题:">
-                <el-button type="primary" @click="addinput">继续添加</el-button>
-              </el-form-item>
-              <el-form-item>
-                <el-col :span="24" v-for="(word,index) in inputNewWords" :key="index">
+                <el-col :span="24" v-for="(word,index) in inputQuestion" :key="index">
                   <el-row :gutter="20" class="margins">
                     <el-col :span="14">
-                      <el-input v-model="inputNewWords[index]" autocomplete="off"></el-input>
+                      <el-input v-model="inputQuestion[index]" autocomplete="off"></el-input>
                     </el-col>
                     <el-col :span="6">
                       <el-button type="danger" plain @click="delinput(index)">删除</el-button>
@@ -171,15 +169,23 @@
                   </el-row>
                 </el-col>
               </el-form-item>
-              <!-- 新增回答 -->
               <el-form-item label="新增回答:">
-                <el-button type="primary" @click="addinput">继续添加</el-button>
-              </el-form-item>
-              <el-form-item>
-                <el-col :span="24" v-for="(word,index) in inputNewWords" :key="index">
+                <el-col :span="24" v-for="(word,index) in inputAnswer" :key="index">
                   <el-row :gutter="20" class="margins">
                     <el-col :span="14">
-                      <el-input v-model="inputNewWords[index]" autocomplete="off"></el-input>
+                      <el-input v-model="inputAnswer[index]" autocomplete="off"></el-input>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-button type="danger" plain @click="delinput(index)">删除</el-button>
+                    </el-col>
+                  </el-row>
+                </el-col>
+              </el-form-item>
+               <el-form-item label="类型:">
+                <el-col :span="24" v-for="(word,index) in inputType" :key="index">
+                  <el-row :gutter="20" class="margins">
+                    <el-col :span="14">
+                      <el-input v-model="inputType[index]" autocomplete="off"></el-input>
                     </el-col>
                     <el-col :span="6">
                       <el-button type="danger" plain @click="delinput(index)">删除</el-button>
@@ -208,15 +214,10 @@
             </el-form>
           </el-dialog>
           <!--删除按钮-->
-          <el-dialog
-            title="删除问答"
-            :visible.sync="VisibleDelWord"
-            style="width:50%;text-align:center"
-          >
+          <el-dialog title="删除问答" :visible.sync="VisibleDelWord" style="width:50%;text-align:center">
             删除不可恢复，您确定要删除问题{{ShowinfoSeleted}}
-            <br />
-            <el-button style="float:right" type="primary" @click="deleteWords">确定</el-button>
-            <el-button style="float:right" @click="VisibleDelWord = false">取消</el-button>
+            <el-button  type="primary" @click="deleteWords">确定</el-button>
+            <el-button  @click="VisibleDelWord = false">取消</el-button>
           </el-dialog>
         </el-main>
       </el-container>
@@ -239,9 +240,12 @@ export default {
       VisibleAddWord: false,
       //================
       VisibleAddWords: false,
-      //===========
       vcbform: { name: "" }, //新增词表
-      inputNewWords: [""],
+      //inputNewWords: [""],
+      //新增问答
+      inputQuestion: [""],
+      inputAnswer: [""],
+      inputType: [""],
       VisibleDelWord: false,
       WordsModify: "", //要
       RowSeleted: [], //当前选中行
@@ -335,11 +339,15 @@ export default {
           "/vocabulary/addword?id=" +
             this.vocabularyid +
             "&words=" +
-            this.inputNewWords
+            this.inputQuestion+
+            this.inputAnswer+
+            this.inputType
         )
         .then(data => {
           (this.VisibleAddWord = false),
-            (this.inputNewWords = [""]),
+            (this.inputQuestion = [""]),
+            (this.inputAnswer = [""]),
+            (this.inputType = [""]),
             this.getWordInfo();
         })
         .catch(err => {
@@ -349,25 +357,58 @@ export default {
       this.getWordInfo();
       //getWordInfo
     },
-    addinput() {
-      let cope = "";
-      this.inputNewWords.push(cope);
-    },
     delinput(index) {
-      this.inputNewWords.splice(index, 1);
+      this.inputQuestion.splice(index, 1);
     },
     handleSelectionChange(val) {
       //val 为选中数据的集合
       this.RowSeleted = val;
     },
-    //修改词汇
+    //修改确定按钮
     modifyWordBtn(index, row) {
       this.WordsModify = "";
       row.edit = !row.edit;
       this.$set(this.WordTable, index, this.WordTable[index]); //重新加载本行数据
     },
-    modifyWord(index, row) {
-      console.log("修改单词", row.id, ":", this.WordsModify);
+    //修改问题
+    modifyQuestion(index, row) {
+      console.log("修改问题", row.id, ":", this.WordsModify);
+      this.axios
+        .post("/vocabulary/modify", {
+          wordID: row.id,
+          newWord: this.WordsModify
+        })
+        .then(
+          (row.edit = !row.edit),
+          (row.word = this.WordsModify),
+          (this.WordsModify = "")
+        )
+        .catch(err => {
+          console.log("请求失败:" + err.status + "," + err.statusText);
+        });
+      this.$set(this.WordTable, index, this.WordTable[index]); //重新加载本行数据
+    },
+    //修改答案
+    modifyAnswer(index, row) {
+      console.log("修改答案", row.id, ":", this.WordsModify);
+      this.axios
+        .post("/vocabulary/modify", {
+          wordID: row.id,
+          newWord: this.WordsModify
+        })
+        .then(
+          (row.edit = !row.edit),
+          (row.word = this.WordsModify),
+          (this.WordsModify = "")
+        )
+        .catch(err => {
+          console.log("请求失败:" + err.status + "," + err.statusText);
+        });
+      this.$set(this.WordTable, index, this.WordTable[index]); //重新加载本行数据
+    },
+    //修改类型
+    modifyType(index, row) {
+      console.log("修改类型", row.id, ":", this.WordsModify);
       this.axios
         .post("/vocabulary/modify", {
           wordID: row.id,

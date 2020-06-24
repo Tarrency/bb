@@ -45,7 +45,7 @@
               </el-col>
               <el-col :span="5">
                 <el-button type="primary" size="small" @click="testinput">查询</el-button>
-                <el-button size="small">删除</el-button>
+                <el-button size="small" @click="reset">删除</el-button>
               </el-col>
             </el-row>
             <el-row>
@@ -397,14 +397,6 @@ export default {
         this.selectAllBtn = "全选";
       }
     },
-    testinput() {
-      console.log("输入" + this.searchText);
-    },
-
-    input(a) {
-      this.searchText = a;
-    },
-
     //导出
     getExcel(res) {
       require.ensure([], () => {
@@ -419,6 +411,18 @@ export default {
     //require后面加相对路径用于引入本地模块或json文件
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]));
+    },
+    //查询删除
+    testinput() {
+      console.log("输入" + this.searchText);
+      if(this.searchText===''||this.searchText==null){
+            return ;} 
+      this.WordTable=this.WordTable.filter((item,index)=>item.word==this.searchText);            
+    },
+    reset(){ this.getWordInfo()},
+    
+    input(a) {
+      this.searchText = a;
     },
     // 导入
     initUpload() {

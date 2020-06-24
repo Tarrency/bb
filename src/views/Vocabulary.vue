@@ -45,7 +45,7 @@
               </el-col>
               <el-col :span="5">
                 <el-button type="primary" size="small" @click="testinput">查询</el-button>
-                <el-button size="small">删除</el-button>
+                <el-button size="small" @click="reset">删除</el-button>
               </el-col>
             </el-row>
             <el-row>
@@ -392,10 +392,15 @@ export default {
         this.selectAllBtn = "全选";
       }
     },
+    //查询删除
     testinput() {
       console.log("输入" + this.searchText);
+      if(this.searchText===''||this.searchText==null){
+            return ;} 
+      this.WordTable=this.WordTable.filter((item,index)=>item.word==this.searchText);            
     },
-
+    reset(){ this.getWordInfo()},
+    
     input(a) {
       this.searchText = a;
     },
