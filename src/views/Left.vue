@@ -91,7 +91,7 @@ export default {
                             index: 'KgManager',
                             title: '知识图谱导入/导出'
                         },{
-                            index: '',
+                            index: 'KgEdit',
                             title: '知识图谱浏览/编辑'
                         }
                     ]

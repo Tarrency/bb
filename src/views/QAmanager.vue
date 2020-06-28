@@ -118,7 +118,7 @@
             </el-row>
           </div>
           <!-- 弹出窗口 -->
-          <!--新增词表按钮-->
+          <!--新增问答库按钮-->
           <el-dialog
             title="新增问答库名称"
             :visible.sync="VisibleNewDialog"
@@ -134,7 +134,7 @@
               </el-form-item>
             </el-form>
           </el-dialog>
-          <!--删除词表按钮-->
+          <!--删除问答库按钮-->
           <el-dialog
             title="删除问答库"
             :visible.sync="VisibleDelDialog"
@@ -159,38 +159,29 @@
               </el-form-item>
               <el-form-item label="新增问题:">
                 <el-col :span="24" v-for="(word,index) in inputQuestion" :key="index">
-                  <el-row :gutter="20" class="margins">
-                    <el-col :span="14">
+                  <!-- <el-row :gutter="20" class="margins">
+                    <el-col :span="14"> -->
                       <el-input v-model="inputQuestion[index]" autocomplete="off"></el-input>
-                    </el-col>
-                    <el-col :span="6">
-                      <el-button type="danger" plain @click="delinput(index)">删除</el-button>
-                    </el-col>
-                  </el-row>
+                    <!-- </el-col>
+                  </el-row> -->
                 </el-col>
               </el-form-item>
               <el-form-item label="新增回答:">
                 <el-col :span="24" v-for="(word,index) in inputAnswer" :key="index">
-                  <el-row :gutter="20" class="margins">
-                    <el-col :span="14">
+                  <!-- <el-row :gutter="20" class="margins">
+                    <el-col :span="14"> -->
                       <el-input v-model="inputAnswer[index]" autocomplete="off"></el-input>
-                    </el-col>
-                    <el-col :span="6">
-                      <el-button type="danger" plain @click="delinput(index)">删除</el-button>
-                    </el-col>
-                  </el-row>
+                    <!-- </el-col>
+                  </el-row> -->
                 </el-col>
               </el-form-item>
                <el-form-item label="类型:">
                 <el-col :span="24" v-for="(word,index) in inputType" :key="index">
-                  <el-row :gutter="20" class="margins">
-                    <el-col :span="14">
+                  <!-- <el-row :gutter="20" class="margins">
+                    <el-col :span="14"> -->
                       <el-input v-model="inputType[index]" autocomplete="off"></el-input>
-                    </el-col>
-                    <el-col :span="6">
-                      <el-button type="danger" plain @click="delinput(index)">删除</el-button>
-                    </el-col>
-                  </el-row>
+                    <!-- </el-col>
+                  </el-row> -->
                 </el-col>
               </el-form-item>
               <el-form-item>

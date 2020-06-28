@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Home from '../App.vue'
 import DashBoard from '../views/DashBoardPage.vue'
 import KgManager from '../views/KgManager'
+import KgEdit from '../views/KgEdit.vue'
 import Vocabulary from '../views/Vocabulary.vue'
 import AgentManager from '../views/AgentManager.vue'
 import DialogueStatistics from '../views/DialogueStatistics.vue'
@@ -10,7 +11,7 @@ import AccountManage from "../views/AccountManage"
 import SensitiveVocab from '../views/SensitiveVocab.vue'
 import QAmanager from '../views/QAmanager.vue'
 //import QAimport from '../views/QAimport.vue'
-import uploadExcel from '../views/uploadExcel.vue'
+//import uploadExcel from '../views/uploadExcel.vue'
 
 
 import test from '../views/test.vue';
@@ -69,9 +70,9 @@ const routes = [{
         name: 'QAmanager',
         component: QAmanager
     }, {
-        path: '/uploadExcel',
-        name: 'uploadExcel',
-        component: uploadExcel
+        path: '/KgEdit',
+        name: 'KgEdit',
+        component: KgEdit
     }
 ]
 

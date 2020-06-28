@@ -26,7 +26,6 @@
               </el-col>
               <el-col :span="8" style="float:right;text-align:right">
                 <el-button type="primary" @click="VisibleNewDialog=true">新增词表</el-button>
-
                 <el-button @click="VisibleDelDialog=checkVocaburalyId()">删除词表</el-button>
               </el-col>
             </el-row>
@@ -480,6 +479,7 @@ export default {
         this.tableLoading = false;
         this.showRemoveFile = true;
         this.WordTable = [...this.WordTable, ...results];
+
         //====================
         this.VisibleAddWords = false;
       };
