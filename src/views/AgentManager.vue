@@ -152,7 +152,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
               <el-button @click="changeAgent = false">取 消</el-button>
-              <el-button type="primary" @click="changeAgent = false">确 定</el-button>
+              <el-button type="primary" @click="onClickChangeAgent">确 定</el-button>
             </div>
           </el-dialog>
           <el-dialog title="挂接对论对话" :visible.sync="changeAgentMountScene" class="dialog-body">
@@ -270,6 +270,9 @@ export default {
       changeAgentMountScene: false
     };
   },
+  created() {
+    this.onSearchAgent(null);
+  },
   methods: {
     /*
      * 搜索 agent
@@ -279,7 +282,7 @@ export default {
       this.axios
         .get("/agent/getlist", {
           params: {
-            adminID: 1,//TODO 因为登录业务没有完成,这里需要当前登录的管理员的id
+            adminID: 1, //TODO 因为登录业务没有完成,这里需要当前登录的管理员的id
             agentName: this.searchAgentName
           }
         })
@@ -335,13 +338,14 @@ export default {
               modeData: "commonsenseQA"
             }
           };
-          this.handleAgent(handleAgent);
+          this.handleAgent(data);
         });
     },
     /*
      * 保存model信息,并写入changeAgent以供修改
+     * data: models of agent
      */
-    handleAgent(agentModelInfo) {
+    handleAgent(data) {
       function mapModelType2Name(modelType) {
         let m = {
           "0": "QA",
@@ -398,22 +402,48 @@ export default {
     onClickAddAgent() {
       this.newAgent = false;
       this.axios
-        .put("/agent/addnew", {
+        .put("/agent/addnew", null, {
           params: {
-            adminID: 1,//TODO 因为登录业务没有完成,这里需要当前登录的管理员的id
-            agentDatabase:JSON.stringify({
+            adminID: 1, //TODO 因为登录业务没有完成,这里需要当前登录的管理员的id
+            agentDatabase: JSON.stringify({
               agentName: this.newInfo.name,
-              QA:this.newInfo.qaid.join(","),
-              scene:this.newInfo.sceneid.join(","),
-              voc:this.newInfo.vocabularyid.join(","),
-              kg:this.newInfo.kgid.join(","),
+              QA: this.newInfo.qaid.join(","),
+              scene: this.newInfo.sceneid.join(","),
+              voc: this.newInfo.vocabularyid.join(","),
+              kg: this.newInfo.kgid.join(",")
             })
           }
         })
         .then(resp => {
-          let data = resp.data.data;
           console.log(resp);
-          this.onSelectAgent(data);
+          this.onSearchAgent(null);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    /*
+     * 添加 agent
+     */
+    onClickChangeAgent() {
+      this.changeAgent = false;
+      this.axios
+        .put("/agent/change", null, {
+          params: {
+            adminID: 1, //TODO 因为登录业务没有完成,这里需要当前登录的管理员的id
+            agentID: this.currentAgentId,
+            agentDatabase: JSON.stringify({
+              agentName: this.newInfo.name,
+              QA: this.newInfo.qaid.join(","),
+              scene: this.newInfo.sceneid.join(","),
+              voc: this.newInfo.vocabularyid.join(","),
+              kg: this.newInfo.kgid.join(",")
+            })
+          }
+        })
+        .then(resp => {
+          console.log(resp);
+          this.onSelectAgent(null);
         })
         .catch(err => {
           console.log(err);
@@ -424,6 +454,21 @@ export default {
      */
     onClickDeleteAgent() {
       this.deleteAgent = false;
+      this.axios
+        .delete("/agent/delete", {
+          params: {
+            adminID: 1, //TODO 因为登录业务没有完成,这里需要当前登录的管理员的id
+            agentID: this.currentAgentId
+          }
+        })
+        .then(resp => {
+          let data = resp.data.data;
+          console.log(resp);
+          this.onSearchAgent(null);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     handleClose(done) {
       this.$confirm("确认关闭？")
