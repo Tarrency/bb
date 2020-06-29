@@ -67,6 +67,16 @@
           <el-menu-item index="6-1">对话统计</el-menu-item>
         </el-menu-item-group>
       </el-submenu>  
+    
+    <el-submenu index="7">
+        <template slot="title">
+          <i class="el-icon-data-line"></i>
+          <span>爬虫管理</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="7-1">爬虫列表</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
 
 
     </el-menu>

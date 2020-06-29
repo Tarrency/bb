@@ -137,6 +137,18 @@ export default {
                       }
                     ]
                 }
+                ,
+                {
+                    icon: 'el-icon-dish',
+                    index: 'crawler',
+                    title: '爬虫管理',
+                    subs:[
+                      {
+                            index: 'CrawlerList',
+                            title: '爬虫列表'
+                      }
+                    ]
+                }
             ]
         };
     },
