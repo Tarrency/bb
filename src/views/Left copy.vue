@@ -75,6 +75,7 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="7-1">爬虫列表</el-menu-item>
+          <el-menu-item index="7-2">新建爬虫</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
 

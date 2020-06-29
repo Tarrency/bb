@@ -146,6 +146,10 @@ export default {
                       {
                             index: 'CrawlerList',
                             title: '爬虫列表'
+                      },{
+                            index: 'CrawlerNew',
+                            title: '新建爬虫'
+
                       }
                     ]
                 }
