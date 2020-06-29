@@ -11,7 +11,7 @@
       @close="handleClose"
       @click="selectItems"
       router
-      style="height:100%;text-align: left;"     
+      style="height:100%;text-align: left;"
       >            <template v-for="item in items">
                 <template v-if="item.subs">
                     <el-submenu :index="item.index" :key="item.index">
@@ -107,7 +107,7 @@ export default {
                       },{
                             index: 'SensitiveVocab',
                             title: '敏感词表'
-                        
+
                       }
                     ]
                 },
@@ -120,9 +120,9 @@ export default {
                             index: 'agent',
                             title: 'Agent状态'
                       },{
-                            index: '',
+                            index: 'agenttest',
                             title: '测试'
-                        
+
                       }
                     ]
                 },

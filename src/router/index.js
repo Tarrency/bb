@@ -5,6 +5,7 @@ import KgManager from '../views/KgManager'
 import KgEdit from '../views/KgEdit.vue'
 import Vocabulary from '../views/Vocabulary.vue'
 import AgentManager from '../views/AgentManager.vue'
+import AgentTestManager from '../views/AgentTestManager.vue'
 import DialogueStatistics from '../views/DialogueStatistics.vue'
 import OperationLog from '../views/OperationLog.vue'
 import AccountManage from "../views/AccountManage"
@@ -49,6 +50,10 @@ const routes = [{
         path: '/agent',
         name: 'AgentManager',
         component: AgentManager
+    }, {
+        path: '/agenttest',
+        name: 'AgentTestManager',
+        component: AgentTestManager
     }, {
         path: '/vocabulary',
         name: 'Vocabulary',
