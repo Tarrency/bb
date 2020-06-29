@@ -19,7 +19,13 @@
           <!-- 2. 即时通讯 -->
           <el-row type="flex" justify="center">
             <div class="im">
-              <JwChat :taleList="list" width="100%" @enter="bindEnter" v-model="inputMsg" :toolConfig="tool" />
+              <JwChat
+                :taleList="list"
+                width="100%"
+                @enter="bindEnter"
+                v-model="inputMsg"
+                :toolConfig="tool"
+              />
             </div>
           </el-row>
         </div>
@@ -34,8 +40,8 @@ export default {
     return {
       currentAgentId: "", //当前agent的id
       currentAgentName: "",
-      inputMsg: "",//当前输入的text
-      list: [],//聊天历史
+      inputMsg: "", //当前输入的text
+      list: [], //聊天历史
       tool: {
         show: ["history"],
         callback: this.toolEvent,
@@ -47,21 +53,30 @@ export default {
   methods: {
     /*
      * 发送
+     * @params text 用户发送的测试文本
+     * 回调agent的回答文本，插入对话列表
      */
     send(text) {
       this.axios
         .post("/aiie/predict", null, {
           params: {
-            modelIds:[],
-            modelType:0,
-            userText: text,
+            modelIds: [],
+            modelType: 0,
+            userText: text
           }
         })
         .then(resp => {
           console.log(resp);
+          const msg = resp.data.data;
+          if (!msg) msg = "机器人的回复";//TODO 等接口可以调试就移除这个假数据
+          const msgObj = this.toRobotTextMsg(msg);
+          this.list.push(msgObj);
         })
         .catch(err => {
           console.log(err);
+          const msg = "机器人的回复";//TODO 等接口可以调试就移除这个假数据
+          const msgObj = this.toRobotTextMsg(msg);
+          this.list.push(msgObj);
         });
     },
     toUserTextMsg(text) {
@@ -89,7 +104,7 @@ export default {
       const msgObj = this.toUserTextMsg(msg);
       this.list.push(msgObj);
       //测试接口
-      send(msg);
+      this.send(msg);
     },
     toolEvent(type) {
       console.log("tools", type);
@@ -107,7 +122,7 @@ export default {
 .title {
   font-size: 24px;
   font-weight: bold;
-  line-height:110%;
+  line-height: 110%;
 }
 .im {
   width: 860px;
