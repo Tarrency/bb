@@ -8,7 +8,7 @@ import VueAxios from 'vue-axios'
 import moment from 'moment'
 import qs from 'qs'
 
-
+require('./assets/mock.js')
 
 Vue.use(VueAxios, axios)
     //Vue.prototype.$http = axios;

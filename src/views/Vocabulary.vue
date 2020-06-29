@@ -430,11 +430,13 @@ export default {
     handleUploadFile() {
       this.initUpload();
       this.getWordInfo();
+      // 接口导入上传
     },
     handleRemove() {
       this.initUpload();
       this.$Message.info("上传的文件已删除！");
     },
+    //判断文件类型
     handleBeforeUpload(file) {
       const fileExt = file.name
         .split(".")
@@ -478,11 +480,24 @@ export default {
         this.uploadLoading = false;
         this.tableLoading = false;
         this.showRemoveFile = true;
-        this.WordTable = [...this.WordTable, ...results];
-
+        // this.WordTable = [...this.WordTable, ...results];
+        this.import();
         //====================
         this.VisibleAddWords = false;
       };
+    },
+    
+    import(){
+      this.axios.post('/ccc',{
+        words:this.results
+      }  
+        )
+        .then(data => {
+          this.getWordInfo();
+        })
+        .catch(err => {
+          console.log("请求失败:" + err.status + "," + err.statusText);
+        });
     }
   }
 };
