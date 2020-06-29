@@ -152,6 +152,12 @@ export default {
             bus.$emit('collapse-content', msg);
         });
     },methods:{
+        handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
+      },
       selectItems(index){
         this.$items.state.adminleftnavnum=index;
         //按钮选中之后设置当前的index为store里的值。
