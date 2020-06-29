@@ -11,7 +11,7 @@
       @close="handleClose"
       @click="selectItems"
       router
-      style="height:100%;text-align: left;"     
+      style="height:100%;text-align: left;"
       >            <template v-for="item in items">
                 <template v-if="item.subs">
                     <el-submenu :index="item.index" :key="item.index">
@@ -107,7 +107,7 @@ export default {
                       },{
                             index: 'SensitiveVocab',
                             title: '敏感词表'
-                        
+
                       }
                     ]
                 },
@@ -120,9 +120,9 @@ export default {
                             index: 'agent',
                             title: 'Agent状态'
                       },{
-                            index: '',
+                            index: 'agenttest',
                             title: '测试'
-                        
+
                       }
                     ]
                 },
@@ -134,6 +134,22 @@ export default {
                       {
                             index: 'dialogue',
                             title: '对话统计'
+                      }
+                    ]
+                }
+                ,
+                {
+                    icon: 'el-icon-dish',
+                    index: 'crawler',
+                    title: '爬虫管理',
+                    subs:[
+                      {
+                            index: 'CrawlerList',
+                            title: '爬虫列表'
+                      },{
+                            index: 'CrawlerNew',
+                            title: '新建爬虫'
+
                       }
                     ]
                 }
@@ -152,6 +168,12 @@ export default {
             bus.$emit('collapse-content', msg);
         });
     },methods:{
+        handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
+      },
       selectItems(index){
         this.$items.state.adminleftnavnum=index;
         //按钮选中之后设置当前的index为store里的值。
