@@ -44,10 +44,19 @@
             </el-table>
           </el-row>
           <!-- 4. 对agent的操作 -->
-          <el-row style="float:right">
-            <el-button type="primary" @click="changeAgent = true">修改</el-button>
-            <el-button type="primary">测试</el-button>
-            <el-button type="primary" @click="deleteAgent = true">删除</el-button>
+          <el-row>
+            <el-col :span="12">
+              <el-row style="float:left">
+                <nobr>{{currentAgentId}}, 创建于{{currentAgentCreateTime}}</nobr>
+              </el-row>
+            </el-col>
+            <el-col :span="12">
+              <el-row style="float:right">
+                <el-button type="primary" @click="changeAgent = true">修改</el-button>
+                <el-button type="primary">测试</el-button>
+                <el-button type="primary" @click="deleteAgent = true">删除</el-button>
+              </el-row>
+            </el-col>
           </el-row>
 
           <!-- 5. 新增agent以及挂载的dialog -->
@@ -71,7 +80,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
               <el-button @click="newAgent = false">取 消</el-button>
-              <el-button type="primary" @click="onClickAddAgent">确 定</el-button>
+              <el-button type="primary" @click="onAddAgent">确 定</el-button>
             </div>
           </el-dialog>
           <el-dialog title="挂接对论对话" :visible.sync="newAgentMountScene" class="dialog-body">
@@ -134,6 +143,9 @@
           <!-- 6. 修改agent的dialog -->
           <el-dialog title="修改Agent" :visible.sync="changeAgent" class="dialog-body">
             <el-form :model="currentInfo" label-position="right" label-width="100px">
+              <el-form-item label="id:">
+                <nobr v-model="currentInfo.id" style="width:50%">{{currentInfo.id}}</nobr>
+              </el-form-item>
               <el-form-item label="名称:" placeholder="请输入agent名称">
                 <el-input v-model="currentInfo.name" style="width:50%">{{currentInfo.name}}</el-input>
               </el-form-item>
@@ -152,7 +164,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
               <el-button @click="changeAgent = false">取 消</el-button>
-              <el-button type="primary" @click="onClickChangeAgent">确 定</el-button>
+              <el-button type="primary" @click="onChangeAgent">确 定</el-button>
             </div>
           </el-dialog>
           <el-dialog title="挂接对论对话" :visible.sync="changeAgentMountScene" class="dialog-body">
@@ -217,7 +229,7 @@
             <span>您确认要删除agent吗？</span>
             <span slot="footer" class="dialog-footer">
               <el-button @click="deleteAgent = false">取 消</el-button>
-              <el-button type="primary" @click="onClickDeleteAgent">确 定</el-button>
+              <el-button type="primary" @click="onDeleteAgent">确 定</el-button>
             </span>
           </el-dialog>
         </div>
@@ -234,6 +246,7 @@ export default {
       agentList: [], //所有可选的agent
       currentAgentId: "", //当前agent的id
       currentAgentModels: [], //当前agent挂载的所有模型 [{modelId,modelType,modeData}]
+      currentAgentCreateTime: "",
       currentInfo: {
         id: 1,
         name: "",
@@ -305,6 +318,7 @@ export default {
         if (agent != null) {
           this.currentInfo.id = agent.agentId;
           this.currentInfo.name = agent.agentName;
+          this.currentAgentCreateTime = new Date(agent.agentCreateTime).toLocaleDateString();
         }
       }
 
@@ -399,7 +413,7 @@ export default {
     /*
      * 添加 agent
      */
-    onClickAddAgent() {
+    onAddAgent() {
       this.newAgent = false;
       this.axios
         .put("/agent/addnew", null, {
@@ -423,9 +437,9 @@ export default {
         });
     },
     /*
-     * 添加 agent
+     * 修改 agent
      */
-    onClickChangeAgent() {
+    onChangeAgent() {
       this.changeAgent = false;
       this.axios
         .put("/agent/change", null, {
@@ -452,7 +466,7 @@ export default {
     /*
      * 删除 agent
      */
-    onClickDeleteAgent() {
+    onDeleteAgent() {
       this.deleteAgent = false;
       this.axios
         .delete("/agent/delete", {
