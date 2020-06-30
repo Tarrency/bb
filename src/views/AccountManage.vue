@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div class="dialoguestatistics">
     <div class="panel">
       <el-row class="el-header">
@@ -105,6 +106,20 @@
           </div>
         </el-col>
       </el-row>
+=======
+    <div id="userInfo">
+        <el-contarner>
+            <el-header>
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item :to="{path:'/'}">首页</el-breadcrumb-item>
+                    <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+                </el-breadcrumb>
+            </el-header>
+            <el-main>
+                
+            </el-main>
+        </el-contarner>
+>>>>>>> d3a6104e677e87982283f3e0c442db8c0c27abac
     </div>
   </div>
 </template>
@@ -177,6 +192,7 @@ export default {
 </script>
 
 <style scoped>
+<<<<<<< HEAD
 .el-header {
   text-align: right;
   font-size: 18px;
@@ -250,4 +266,7 @@ export default {
   background-color: #000;
   background-color: rgba(0, 0, 0, 0.3);
 }
+=======
+
+>>>>>>> d3a6104e677e87982283f3e0c442db8c0c27abac
 </style>
