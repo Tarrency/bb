@@ -47,14 +47,23 @@
           <el-row>
             <el-col :span="12">
               <el-row style="float:left">
-                <nobr>{{currentAgentId}}, 创建于{{currentAgentCreateTime}}</nobr>
+                <nobr v-if="selectExistAgent()">Agent ID:{{currentAgentId}}，创建于{{currentAgentCreateTime}}</nobr>
+                <nobr v-if="!selectExistAgent()">请选择一个agent</nobr>
               </el-row>
             </el-col>
             <el-col :span="12">
               <el-row style="float:right">
-                <el-button type="primary" @click="changeAgent = true">修改</el-button>
-                <el-button type="primary">测试</el-button>
-                <el-button type="primary" @click="deleteAgent = true">删除</el-button>
+                <el-button
+                  type="primary"
+                  @click="changeAgent = true"
+                  :disabled="!selectExistAgent()"
+                >修改</el-button>
+                <el-button type="primary" :disabled="!selectExistAgent()">测试</el-button>
+                <el-button
+                  type="primary"
+                  @click="deleteAgent = true"
+                  :disabled="!selectExistAgent()"
+                >删除</el-button>
               </el-row>
             </el-col>
           </el-row>
@@ -283,10 +292,14 @@ export default {
       changeAgentMountScene: false
     };
   },
+  computed: {},
   created() {
     this.onSearchAgent(null);
   },
   methods: {
+    selectExistAgent() {
+      return this.currentAgentId && !this.currentAgentId.isEmpty();
+    },
     /*
      * 搜索 agent
      */
@@ -318,7 +331,9 @@ export default {
         if (agent != null) {
           this.currentInfo.id = agent.agentId;
           this.currentInfo.name = agent.agentName;
-          this.currentAgentCreateTime = new Date(agent.agentCreateTime).toLocaleDateString();
+          this.currentAgentCreateTime = new Date(
+            agent.agentCreateTime
+          ).toLocaleDateString();
         }
       }
 
