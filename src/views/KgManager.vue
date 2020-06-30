@@ -13,7 +13,7 @@
           <!-- 主要内容区 -->
           <div>
             <el-row :span="24">
-              <!-- 单词表格 -->
+              <!--数据库表格 -->
               <el-table :data="tableData" style="width:100%">
                 <el-table-column type="selection" width="55" label="全选"></el-table-column>
                 <el-table-column prop="id" label="序号"></el-table-column>
@@ -37,7 +37,7 @@
               <el-col :span="12" style="float:right;text-align:right">
                 <el-button
                   type="primary"
-                  @click="VisibleAddWord= checkVocaburalyId()"
+                  @click="addKgBtn()"
                 >新增知识图谱</el-button>
                 <el-button  type="danger" plain @click="deleteWordBtn()">删除</el-button>
                 <el-button type="primary" @click="getExcel(WordTable)">导出</el-button>
@@ -46,7 +46,7 @@
           </div>
           <!-- 弹出窗口 -->
           <!--新增知识图谱按钮-->
-          <el-dialog title="新增知识图谱" :visible.sync="VisibleAddWord" class="dialog">
+          <el-dialog title="新增知识图谱" :visible.sync="VisibleAddKg" class="dialog">
             <el-form>
               <el-form-item label="新增数据库名称:">
                 <el-button type="primary" @click="addinput">继续添加</el-button>
@@ -65,14 +65,14 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="addWord">确定</el-button>
-                <el-button @click="VisibleAddWord = false">取消</el-button>
+                <el-button @click="VisibleAddKg = false">取消</el-button>
               </el-form-item>
             </el-form>
           </el-dialog>
           <!--删除按钮-->
-          <el-dialog title="删除单词" :visible.sync="VisibleDelWord"
+          <el-dialog title="删除数据库" :visible.sync="VisibleDelWord"
             style="width:50%;text-align:center">
-            删除不可恢复，您确定要删除单词{{ShowinfoSeleted}}
+            删除不可恢复，您确定要删除数据库{{ShowinfoSeleted}}
             <el-button  type="primary" @click="deleteWords">确定</el-button>
             <el-button  @click="VisibleDelWord = false">取消</el-button>
           </el-dialog>
@@ -94,10 +94,8 @@ export default {
       WordTable: [], //词汇列表
       VisibleNewDialog: false,
       VisibleDelDialog: false,
-      VisibleAddWord: false,
+      VisibleAddKg: false,
       //================
-      VisibleAddWords: false,
-      //===========
       vcbform: { name: "" }, //新增词表
       inputNewWords: [""],
       VisibleDelWord: false,
@@ -157,17 +155,17 @@ export default {
         });
     },
     //检查需要先选中词表的操作
-    checkVocaburalyId() {
-      if (this.vocabularyid > 0) {
-        return true;
-      } else {
-        this.$msgbox({
-          type: "warning",
-          message: "请先选择词表"
-        });
-        return false;
-      }
-    },
+    // checkVocaburalyId() {
+    //   if (this.vocabularyid > 0) {
+    //     return true;
+    //   } else {
+    //     this.$msgbox({
+    //       type: "warning",
+    //       message: "请先选择词表"
+    //     });
+    //     return false;
+    //   }
+    // },
 
     //删除词表
     delVocaburaly() {
@@ -179,6 +177,9 @@ export default {
         });
     },
     //新增词汇
+    addKgBtn(){
+      this.VisibleAddKg=true;
+    },
     addWord() {
       this.axios
         .post(
@@ -188,7 +189,7 @@ export default {
             this.inputNewWords
         )
         .then(data => {
-          (this.VisibleAddWord = false),
+          (this.VisibleAddKg = false),
             (this.inputNewWords = [""]),
             this.getWordInfo();
         })
@@ -225,7 +226,7 @@ export default {
         this.ShowinfoSeleted = '"' + row.word + '"';
         this.IdSeleted.push(row.id);
       }
-      console.log("删除单词", this.IdSeleted);
+      console.log("删除数据库", this.IdSeleted);
       this.VisibleDelWord = true;
     },
     deleteWords() {

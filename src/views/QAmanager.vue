@@ -1,217 +1,220 @@
 <template>
   <div>
     <el-container>
-      <el-container>
-        <el-header>
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>QA知识管理</el-breadcrumb-item>
-          </el-breadcrumb>
-        </el-header>
-        <el-main style="line-height:80px">
-          <!-- 主要内容区 -->
-          <div>
-            <el-row>
-              <el-col :span="2" style="float:left">
-                <span>问答库</span>
-              </el-col>
-              <el-col :span="8" style="float:left">
-                <el-radio-group v-model="vocabularyid" @change="getWordInfo">
-                  <el-radio-button
-                    v-for="value in vocabulary"
-                    :key="value.id"
-                    :label="value.id"
-                  >{{value.name}}</el-radio-button>
-                </el-radio-group>
-                <!-- <el-input value="1" /> -->
-              </el-col>
-              <el-col :span="8" style="float:right;text-align:right">
-                <el-button type="primary" size="small" @click="VisibleNewDialog=true">新增问答库</el-button>
+      <el-header>
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item>QA知识管理</el-breadcrumb-item>
+        </el-breadcrumb>
+      </el-header>
+      <el-main style="line-height:80px">
+        <!-- 主要内容区 -->
+        <div>
+          <el-row>
+            <el-col :span="2" style="float:left">
+              <span>问答库</span>
+            </el-col>
+            <el-col :span="8" style="float:left">
+              <el-radio-group v-model="QAlibraryid" @change="getQAInfo">
+                <el-radio-button
+                  v-for="value in QAlibrary"
+                  :key="value.id"
+                  :label="value.id"
+                >{{value.name}}</el-radio-button>
+              </el-radio-group>
+            </el-col>
+            <el-col :span="8" style="float:right;text-align:right">
+              <el-button type="primary" size="small" @click="VisibleNewDialog=true">新增问答库</el-button>
 
-                <el-button size="small" @click="VisibleDelDialog=checkVocaburalyId()">删除问答库</el-button>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="9" :offset="10">
-                <el-input placeholder="请输入关键词在此搜索" v-model.trim="searchText" @input="input"
-                  size="small"
-                  clearable>
-                  <el-button slot="prepend">关键词</el-button>
-                  <!--复合型输入框，slot属性可指定是在输入框前面还是后置插入标签或按钮-->
-                </el-input>
-              </el-col>
-              <el-col :span="5">
-                <el-button type="primary" size="small" @click="testinput">查询</el-button>
-                <el-button size="small">删除</el-button>
-              </el-col>
-            </el-row>
-            <el-row>
-              <!-- 单词表格 -->
-              <el-table
-                :data="WordTable"
-                ref="refWordTable"
-                @selection-change="handleSelectionChange"
+              <el-button size="small" @click="VisibleDelDialog=checkQAlibraryId()">删除问答库</el-button>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="9" :offset="10">
+              <el-input
+                placeholder="请输入关键词在此搜索"
+                v-model.trim="searchText"
+                @input="input"
+                size="small"
+                clearable
               >
-                <el-table-column type="selection" width="55" label="全选"></el-table-column>
-                <el-table-column prop="id" label="id"></el-table-column>
-                <el-table-column prop="question" label="问题">
-                  <template slot-scope="scope">
-                    <span v-if="!scope.row.edit">{{scope.row.quetion}}</span>
-                    <el-input v-model="WordsModify" v-else>
-                      <template slot="append">
-                        <el-button @click="modifyQuestion(scope.$index,scope.row)">提交</el-button>
-                      </template>
-                    </el-input>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="answer" label="回答">
-                  <template slot-scope="scope">
-                    <span v-if="!scope.row.edit">{{scope.row.answer}}</span>
-                    <el-input v-model="WordsModify" v-else>
-                      <template slot="append">
-                        <el-button @click="modifyAnswer(scope.$index,scope.row)">提交</el-button>
-                      </template>
-                    </el-input>
-                  </template>
-                </el-table-column>
-                 <el-table-column prop="type" label="类型">
-                  <template slot-scope="scope">
-                    <span v-if="!scope.row.edit">{{scope.row.type}}</span>
-                     <el-input v-model="WordsModify" v-else>
-                      <template slot="append">
-                        <el-button @click="modifyType(scope.$index,scope.row)">提交</el-button>
-                      </template>
-                    </el-input>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="word_update_time" label="更新时间">
-                  <template slot-scope="scope">{{scope.row.word_update_time| dateFormat}}</template>
-                </el-table-column>
-                <el-table-column prop="action" label="操作">
-                  <template slot-scope="scope">
-                    <el-button size="mini" @click="modifyWordBtn(scope.$index, scope.row)">编辑</el-button>
-                    <el-button size="mini" type="danger" @click="deleteWordBtn(scope.row)">删除</el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </el-row>
-            <el-row>
-              <el-col :span="4" style="float:left;text-align:left">
-                <el-button type="primary" size="small" @click="selectAll(WordTable)">{{selectAllBtn}}</el-button>
+                <el-button slot="prepend">关键词</el-button>
+                <!--复合型输入框，slot属性可指定是在输入框前面还是后置插入标签或按钮-->
+              </el-input>
+            </el-col>
+            <el-col :span="5">
+              <el-button type="primary" size="small" @click="testinput">查询</el-button>
+              <el-button size="small">删除</el-button>
+            </el-col>
+          </el-row>
+          <el-row>
+            <!-- 单词表格 -->
+            <el-table :data="QATable" ref="refQATable" @selection-change="handleSelectionChange">
+              <el-table-column type="selection" width="55" label="全选"></el-table-column>
+              <el-table-column prop="id" label="id"></el-table-column>
+              <el-table-column prop="question" label="问题">
+                <template slot-scope="scope">
+                  <span v-if="!scope.row.edit">{{scope.row.quetion}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="answer" label="回答">
+                <template slot-scope="scope">
+                  <span v-if="!scope.row.edit">{{scope.row.answer}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="type" label="类型">
+                <template slot-scope="scope">
+                  <span v-if="!scope.row.edit">{{scope.row.type}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="word_update_time" label="更新时间">
+                <template slot-scope="scope">{{scope.row.word_update_time| dateFormat}}</template>
+              </el-table-column>
+              <el-table-column prop="action" label="操作">
+                <template slot-scope="scope">
+                  <!-- <el-button size="mini" @click="modifyWordBtn(scope.$index, scope.row)">编辑</el-button> -->
+                  <el-button size="mini" @click="modifyBtn()">编辑</el-button>
+                  <el-button size="mini" type="danger" @click="deleteQABtn(scope.row)">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-row>
+          <el-row>
+            <el-col :span="4" style="float:left;text-align:left">
+              <el-button type="primary" size="small" @click="selectAll(QATable)">{{selectAllBtn}}</el-button>
+            </el-col>
+            <el-col :span="12" style="float:right;text-align:right">
+              <el-button type="primary" size="small" @click="VisibleAddQA= checkQAlibraryId()">逐条新增</el-button>
+              <el-button type="danger" size="small" plain @click="deleteQABtn()">删除</el-button>
+              <!-- =================== -->
+              <el-button type="primary" size="small" @click="VisibleAddQAs= checkQAlibraryId()">批量导入</el-button>
+              <!-- ============================= -->
+              <el-button type="primary" size="small" @click="getExcel(QATable)">导出</el-button>
+            </el-col>
+          </el-row>
+        </div>
+        <!-- 弹出窗口 -->
+        <!--新增问答库按钮-->
+        <el-dialog
+          title="新增问答库名称"
+          :visible.sync="VisibleNewDialog"
+          style="width:50%;text-align:center"
+        >
+          <el-form :model="QAform">
+            <el-form-item>
+              <el-input v-model="QAform.name" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="newQAlibrary">确定</el-button>
+              <el-button @click="VisibleNewDialog=false">取消</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+        <!-- 编辑按钮 -->
+        <el-dialog title="修改问答" :visible.sync="VisibleModify" class="dialog">
+          <el-form>
+            <el-form-item label="所属问答库：">
+              <nobr v-for="v in QAlibrary" v-show="v.id == QAlibraryid" :key="v.id">{{v.name}}</nobr>
+            </el-form-item>
+            <el-form-item label="修改问题:">
+              <el-col :span="24" v-for="(question,index) in inputQuestion" :key="index">
+                <!-- <el-row :gutter="20" class="margins">
+                <el-col :span="14">-->
+                <el-input v-model="inputQuestion[index]" autocomplete="off"></el-input>
+                <!-- </el-col>
+                </el-row>-->
               </el-col>
-              <el-col :span="12" style="float:right;text-align:right">
-                <el-button
-                  type="primary"
-                  size="small"
-                  @click="VisibleAddWord= checkVocaburalyId()"
-                >逐条新增</el-button>
-                <el-button type="danger" size="small" plain @click="deleteWordBtn()">删除</el-button>
-                <!-- =================== -->
-                <el-button
-                  type="primary"
-                  size="small"
-                  @click="VisibleAddWords= checkVocaburalyId()"
-                >批量导入</el-button>
-                <!-- ============================= -->
-                <el-button type="primary" size="small" @click="getExcel(WordTable)">导出</el-button>
+            </el-form-item>
+            <el-form-item label="修改回答:">
+              <el-col :span="24" v-for="(answer,index) in inputAnswer" :key="index">
+                <el-input v-model="inputAnswer[index]" autocomplete="off"></el-input>
               </el-col>
-            </el-row>
-          </div>
-          <!-- 弹出窗口 -->
-          <!--新增问答库按钮-->
-          <el-dialog
-            title="新增问答库名称"
-            :visible.sync="VisibleNewDialog"
-            style="width:50%;text-align:center"
-          >
-            <el-form :model="vcbform">
-              <el-form-item>
-                <el-input v-model="vcbform.name" autocomplete="off"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button  type="primary" @click="newVocaburaly">确定</el-button>
-                <el-button  @click="VisibleNewDialog=false">取消</el-button>
-              </el-form-item>
-            </el-form>
-          </el-dialog>
-          <!--删除问答库按钮-->
-          <el-dialog
-            title="删除问答库"
-            :visible.sync="VisibleDelDialog"
-            style="width:50%;text-align:center"
-          >
-            删除不可恢复，您确定要删除问答库“
-            <nobr
-              v-for="v in vocabulary"
-              v-show="v.id == vocabularyid"
-              :key="v.id"
-            >{{v.name}}</nobr>
-            ”?
-            <br />
-            <el-button style="float:right" type="primary" @click="delVocaburaly">确定</el-button>
-            <el-button style="float:right" @click="VisibleDelDialog = false">取消</el-button>
-          </el-dialog>
-          <!--逐条新增按钮-->
-          <el-dialog title="新增问答" :visible.sync="VisibleAddWord" class="dialog">
-            <el-form>
-              <el-form-item label="所属问答库：">
-                <nobr v-for="v in vocabulary" v-show="v.id == vocabularyid" :key="v.id">{{v.name}}</nobr>
-              </el-form-item>
-              <el-form-item label="新增问题:">
-                <el-col :span="24" v-for="(word,index) in inputQuestion" :key="index">
-                  <!-- <el-row :gutter="20" class="margins">
-                    <el-col :span="14"> -->
-                      <el-input v-model="inputQuestion[index]" autocomplete="off"></el-input>
-                    <!-- </el-col>
-                  </el-row> -->
-                </el-col>
-              </el-form-item>
-              <el-form-item label="新增回答:">
-                <el-col :span="24" v-for="(word,index) in inputAnswer" :key="index">
-                  <!-- <el-row :gutter="20" class="margins">
-                    <el-col :span="14"> -->
-                      <el-input v-model="inputAnswer[index]" autocomplete="off"></el-input>
-                    <!-- </el-col>
-                  </el-row> -->
-                </el-col>
-              </el-form-item>
-               <el-form-item label="类型:">
-                <el-col :span="24" v-for="(word,index) in inputType" :key="index">
-                  <!-- <el-row :gutter="20" class="margins">
-                    <el-col :span="14"> -->
-                      <el-input v-model="inputType[index]" autocomplete="off"></el-input>
-                    <!-- </el-col>
-                  </el-row> -->
-                </el-col>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="addWord">确定</el-button>
-                <el-button @click="VisibleAddWord = false">取消</el-button>
-              </el-form-item>
-            </el-form>
-          </el-dialog>
-          <!--导入弹框-->
-          <el-dialog title="导入问答" :visible.sync="VisibleAddWords" class="dialog">
-            <el-form>
-              <el-form-item label="所属问答库：">
-                <nobr v-for="v in vocabulary" v-show="v.id == vocabularyid" :key="v.id">{{v.name}}</nobr>
-              </el-form-item>
-              <el-form-item>
-                <el-upload action :before-upload="handleBeforeUpload" accept=".xls, .xlsx">
-                  <el-button type="primary" :loading="uploadLoading" @click="handleUploadFile">确定</el-button>
-                </el-upload>
-                <el-button @click="VisibleAddWords = false">取消</el-button>
-              </el-form-item>
-            </el-form>
-          </el-dialog>
-          <!--删除按钮-->
-          <el-dialog title="删除问答" :visible.sync="VisibleDelWord" style="width:50%;text-align:center">
-            删除不可恢复，您确定要删除问题{{ShowinfoSeleted}}
-            <el-button  type="primary" @click="deleteWords">确定</el-button>
-            <el-button  @click="VisibleDelWord = false">取消</el-button>
-          </el-dialog>
-        </el-main>
-      </el-container>
+            </el-form-item>
+            <el-form-item label="修改类型:">
+              <el-col :span="24" v-for="(type,index) in inputType" :key="index">
+                <el-input v-model="inputType[index]" autocomplete="off"></el-input>
+              </el-col>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="modifyQA">确定</el-button>
+              <el-button @click="VisibleModify = false">取消</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+        <!--删除问答库按钮-->
+        <el-dialog
+          title="删除问答库"
+          :visible.sync="VisibleDelDialog"
+          style="width:50%;text-align:center"
+        >
+          <el-form>
+            <el-form-item>
+              删除不可恢复，您确定要删除问答库“
+              <nobr
+                v-for="v in QAlibrary"
+                v-show="v.id == QAlibraryid"
+                :key="v.id"
+              >{{v.name}}</nobr>
+              ”?
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="deleteLibrary">确定</el-button>
+              <el-button @click="VisibleDelDialog = false">取消</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+        <!--逐条新增按钮-->
+        <el-dialog title="新增问答" :visible.sync="VisibleAddQA" class="dialog">
+          <el-form>
+            <el-form-item label="所属问答库：">
+              <nobr v-for="v in QAlibrary" v-show="v.id == QAlibraryid" :key="v.id">{{v.name}}</nobr>
+            </el-form-item>
+            <el-form-item label="新增问题:">
+              <el-col :span="24" v-for="(question,index) in inputQuestion" :key="index">
+                <el-input v-model="inputQuestion[index]" autocomplete="off"></el-input>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="新增回答:">
+              <el-col :span="24" v-for="(answer,index) in inputAnswer" :key="index">
+                <el-input v-model="inputAnswer[index]" autocomplete="off"></el-input>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="类型:">
+              <el-col :span="24" v-for="(type,index) in inputType" :key="index">
+                <el-input v-model="inputType[index]" autocomplete="off"></el-input>
+              </el-col>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="addQA">确定</el-button>
+              <el-button @click="VisibleAddQA = false">取消</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+        <!--导入弹框-->
+        <el-dialog title="导入问答" :visible.sync="VisibleAddQAs" class="dialog">
+          <el-form>
+            <el-form-item label="所属问答库：">
+              <nobr v-for="v in QAlibrary" v-show="v.id == QAlibraryid" :key="v.id">{{v.name}}</nobr>
+            </el-form-item>
+            <el-form-item>
+              <el-upload action :before-upload="handleBeforeUpload" accept=".xls, .xlsx">
+                <el-button type="primary" :loading="uploadLoading" @click="handleUploadFile">确定</el-button>
+              </el-upload>
+              <el-button @click="VisibleAddQAs = false">取消</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+        <!--删除按钮-->
+        <el-dialog title="删除问答" :visible.sync="VisibleDelQA" style="width:50%;text-align:center">
+          <el-form>
+            <el-form-item>删除不可恢复，您确定要删除问题{{ShowinfoSeleted}}</el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="deleteQA">确定</el-button>
+              <el-button @click="VisibleDelQA = false">取消</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+      </el-main>
     </el-container>
   </div>
 </template>
@@ -222,23 +225,29 @@ let moment = require("moment");
 export default {
   data() {
     return {
-      vocabulary: [{ id: 0, name: "" }], //词表列表
-      vocabularyid: 0, //选中词表
+      QAlibrary: [{ id: 0, name: "" }], //问答库列表
+      QAlibraryid: 0, //选中问答库
       searchText: "", //搜素关键词
-      WordTable: [], //词汇列表
+      QATable: [], //问答列表
       VisibleNewDialog: false,
       VisibleDelDialog: false,
-      VisibleAddWord: false,
+      VisibleAddQA: false,
       //================
-      VisibleAddWords: false,
-      vcbform: { name: "" }, //新增词表
+      VisibleAddQAs: false,
+      QAform: { name: "" }, //新增问答库
       //inputNewWords: [""],
       //新增问答
       inputQuestion: [""],
       inputAnswer: [""],
       inputType: [""],
-      VisibleDelWord: false,
-      WordsModify: "", //要
+      VisibleDelQA: false,
+      // WordsModify: "",
+      //修改编辑
+      // QAmodify :"",
+      QuestionModify: "",
+      AnswerModify: "",
+      TypeModify: "",
+      VisibleModify: false,
       RowSeleted: [], //当前选中行
       IdSeleted: [], //当前选中id集合
       ShowinfoSeleted: [], //当前选中单词集合
@@ -254,56 +263,51 @@ export default {
   },
   mounted() {
     //钩子函数
-    this.getVcabularyInfo();
+    this.getQALibInfo();
   },
   methods: {
-    //获取词表名称id
-    getVcabularyInfo() {
+    //获取问答库名称
+    getQALibInfo() {
       this.axios
-        .get("/vocabulary/getlist", {
+        .get("/aaa", {
           params: {
-            type: 0
+            
           }
-          // 0:专用词，1：敏感词
         })
         .then(resp => {
-          this.vocabulary = resp.data.data;
+          this.QAlibrary = resp.data.data;
         })
         .catch(err => {});
     },
-    //获取词语列表
-    getWordInfo() {
+    //获取问答列表
+    getQAInfo() {
       this.axios
-        .get("/vocabulary/search", {
+        .get("/bbb", {
           params: {
-            id: this.vocabularyid,
+            id: this.QAlibraryid,
             key: this.searchText
           }
         })
         .then(resp => {
-          this.WordTable = resp.data.data;
-          this.WordTable.edit = false;
+          this.QATable = resp.data.data;
+          this.QATable.edit = false;
         })
         .catch(err => {
           console.log("请求失败:" + err.status + "," + err.statusText);
         });
     },
-    //新增词表
-    newVocaburaly() {
+    //新增问答库
+    newQAlibrary() {
       this.axios
-        .post(
-          "/vocabulary/addnew?name=" + this.vcbform.name + "&type=0"
-          //name: this.vcbform.name,
-          //type : 0 // 0:专用词，1：敏感词
-        )
-        .then(this.getVcabularyInfo, (this.VisibleNewDialog = false))
+        .post("/ccc" + this.QAform.name + "&type=0")
+        .then(this.getQALibInfo, (this.VisibleNewDialog = false))
         .catch(err => {
           console.log("请求失败:" + err.status + "," + err.statusText);
         });
     },
-    //检查需要先选中词表的操作
-    checkVocaburalyId() {
-      if (this.vocabularyid > 0) {
+    //检查需要先选中问答库的操作
+    checkQAlibraryId() {
+      if (this.QAlibraryid > 0) {
         return true;
       } else {
         this.$msgbox({
@@ -313,40 +317,39 @@ export default {
         return false;
       }
     },
-
-    //删除词表
-    delVocaburaly() {
+    //删除问答库
+    deleteLibrary() {
       this.axios
-        .delete("/vocabulary/delete?id=" + this.vocabularyid)
-        .then(this.getVcabularyInfo, (this.VisibleDelDialog = false))
+        .delete("/ddd" + this.QAlibraryid)
+        .then(this.getQALibInfo, (this.VisibleDelDialog = false))
         .catch(err => {
           console.log("请求失败:" + err.status + "," + err.statusText);
         });
     },
-    //新增词汇
-    addWord() {
+    //新增问答
+    addQA() {
       this.axios
         .post(
-          "/vocabulary/addword?id=" +
-            this.vocabularyid +
-            "&words=" +
-            this.inputQuestion+
-            this.inputAnswer+
-            this.inputType
+          "/eee" ,{
+            id: this.QAlibraryid,
+            question:this.inputQuestion,
+            answer: this.inputAnswer,
+            type:this.inputType
+          }
         )
         .then(data => {
-          (this.VisibleAddWord = false),
+          (this.VisibleAddQA = false),
             (this.inputQuestion = [""]),
             (this.inputAnswer = [""]),
             (this.inputType = [""]),
-            this.getWordInfo();
+            this.getQAInfo();
         })
         .catch(err => {
           console.log("请求失败:" + err.status + "," + err.statusText);
         });
 
-      this.getWordInfo();
-      //getWordInfo
+      this.getQAInfo();
+      //getQAInfo
     },
     delinput(index) {
       this.inputQuestion.splice(index, 1);
@@ -355,68 +358,44 @@ export default {
       //val 为选中数据的集合
       this.RowSeleted = val;
     },
+    //编辑
+    modifyBtn() {
+      this.VisibleModify = true;
+    },
     //修改确定按钮
-    modifyWordBtn(index, row) {
-      this.WordsModify = "";
-      row.edit = !row.edit;
-      this.$set(this.WordTable, index, this.WordTable[index]); //重新加载本行数据
-    },
-    //修改问题
-    modifyQuestion(index, row) {
-      console.log("修改问题", row.id, ":", this.WordsModify);
+    // modifyQA(index, row) {
+    //   this.WordsModify = "";
+    //   row.edit = !row.edit;
+    //   this.$set(this.QATable, index, this.QATable[index]); //重新加载本行数据
+    // },
+    //修改问答确定按钮
+    modifyQA(index, row) {
+      console.log("修改问题", row.id, ":", this.QuestionModify);
       this.axios
-        .post("/vocabulary/modify", {
+        .post("/bbb", {
           wordID: row.id,
-          newWord: this.WordsModify
+          newQuestion: this.QuestionModify,
+          newAnswer: this.AnswerModify,
+          newType: this.TypeModify
         })
         .then(
           (row.edit = !row.edit),
-          (row.word = this.WordsModify),
-          (this.WordsModify = "")
+          (row.question = this.QuestionModify),
+          (this.QuestionModify = ""),
+          (row.answer = this.AnswerModify),
+          (this.AnswerModify = ""),
+          (row.type = this.TypeModify),
+          (this.TypeModify = ""),
+          this.$set(this.QATable, index, this.QATable[index]), //重新加载本行数据
+          (this.VisibleModify = false)
         )
         .catch(err => {
           console.log("请求失败:" + err.status + "," + err.statusText);
         });
-      this.$set(this.WordTable, index, this.WordTable[index]); //重新加载本行数据
-    },
-    //修改答案
-    modifyAnswer(index, row) {
-      console.log("修改答案", row.id, ":", this.WordsModify);
-      this.axios
-        .post("/vocabulary/modify", {
-          wordID: row.id,
-          newWord: this.WordsModify
-        })
-        .then(
-          (row.edit = !row.edit),
-          (row.word = this.WordsModify),
-          (this.WordsModify = "")
-        )
-        .catch(err => {
-          console.log("请求失败:" + err.status + "," + err.statusText);
-        });
-      this.$set(this.WordTable, index, this.WordTable[index]); //重新加载本行数据
-    },
-    //修改类型
-    modifyType(index, row) {
-      console.log("修改类型", row.id, ":", this.WordsModify);
-      this.axios
-        .post("/vocabulary/modify", {
-          wordID: row.id,
-          newWord: this.WordsModify
-        })
-        .then(
-          (row.edit = !row.edit),
-          (row.word = this.WordsModify),
-          (this.WordsModify = "")
-        )
-        .catch(err => {
-          console.log("请求失败:" + err.status + "," + err.statusText);
-        });
-      this.$set(this.WordTable, index, this.WordTable[index]); //重新加载本行数据
+      this.$set(this.QATable, index, this.QATable[index]); //重新加载本行数据
     },
     //删除词汇
-    deleteWordBtn(row) {
+    deleteQABtn(row) {
       console.log("row", row);
       if (!row) {
         this.IdSeleted = [];
@@ -431,32 +410,32 @@ export default {
         this.IdSeleted.push(row.id);
       }
       console.log("删除单词", this.IdSeleted);
-      this.VisibleDelWord = true;
+      this.VisibleDelQA = true;
     },
-    deleteWords() {
+    deleteQA() {
       this.axios
-        .delete("./vocabulary/deleteWords?wordIDs=" + this.IdSeleted.join(","))
+        .delete("/fff" + this.IdSeleted.join(","))
         .then(data => {
           this.RowSeleted = [];
           this.IdSeleted = [];
           this.ShowinfoSeleted = "";
-          this.getWordInfo();
+          this.getQAInfo();
         })
         .catch(err => {
           console.log("请求失败:" + err.status + "," + err.statusText);
         });
-      this.VisibleDelWord = false;
+      this.VisibleDelQA = false;
     },
     //全选词汇
     selectAll(rows) {
       if (this.selectAllBtn.startsWith("全选")) {
         rows.forEach(row => {
-          this.$refs.refWordTable.toggleRowSelection(row, true);
+          this.$refs.refQATable.toggleRowSelection(row, true);
         });
         this.selectAllBtn = "取消全选";
       } else {
         rows.forEach(row => {
-          this.$refs.refWordTable.toggleRowSelection(row, false);
+          this.$refs.refQATable.toggleRowSelection(row, false);
         });
         this.selectAllBtn = "全选";
       }
@@ -468,7 +447,6 @@ export default {
     input(a) {
       this.searchText = a;
     },
-
     //导出
     getExcel(res) {
       require.ensure([], () => {
@@ -494,7 +472,7 @@ export default {
     },
     handleUploadFile() {
       this.initUpload();
-      this.getWordInfo();
+      this.getQAInfo();
     },
     handleRemove() {
       this.initUpload();
@@ -543,9 +521,9 @@ export default {
         this.uploadLoading = false;
         this.tableLoading = false;
         this.showRemoveFile = true;
-        this.WordTable = [...this.WordTable, ...results];
+        this.QATable = [...this.QATable, ...results];
         //====================
-        this.VisibleAddWords = false;
+        this.VisibleAddQAs = false;
       };
     }
   }

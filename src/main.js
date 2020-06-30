@@ -9,7 +9,9 @@ import moment from 'moment'
 import qs from 'qs'
 import Chat from 'jwchat';
 
-Vue.use(Chat)// 测试界面的聊天窗口
+require('./assets/mock.js')
+
+Vue.use(Chat) // 测试界面的聊天窗口
 Vue.use(VueAxios, axios)
     //Vue.prototype.$http = axios;
 import "element-ui/lib/theme-chalk/index.css";

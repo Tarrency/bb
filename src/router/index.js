@@ -11,6 +11,8 @@ import OperationLog from '../views/OperationLog.vue'
 import AccountManage from "../views/AccountManage"
 import SensitiveVocab from '../views/SensitiveVocab.vue'
 import QAmanager from '../views/QAmanager.vue'
+import CrawlerList from '../views/CrawlerList.vue'
+import CrawlerNew from '../views/CrawlerNew.vue'
 //import QAimport from '../views/QAimport.vue'
 //import uploadExcel from '../views/uploadExcel.vue'
 
@@ -78,6 +80,16 @@ const routes = [{
         path: '/KgEdit',
         name: 'KgEdit',
         component: KgEdit
+    }, 
+    {
+        path: '/CrawlerList',
+        name: 'CrawlerList',
+        component: CrawlerList
+    }, 
+    {
+        path: '/CrawlerNew',
+        name: 'CrawlerNew',
+        component: CrawlerNew
     }
 ]
 
