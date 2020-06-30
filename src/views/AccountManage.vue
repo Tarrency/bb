@@ -1,28 +1,21 @@
 <template>
-<<<<<<< HEAD
-  <div class="dialoguestatistics">
-    <div class="panel">
-      <el-row class="el-header">
-        <el-col :span="8">
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>系统设置</el-breadcrumb-item>
-            <el-breadcrumb-item>用户信息</el-breadcrumb-item>
-          </el-breadcrumb>
-        </el-col>
-        <el-col :span="6">
-          <el-button @click="routerTo('/dashboard')" type="text">返回主页</el-button>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="8">
-          <div class="title">个人信息</div>
-          <el-row>
-            <!-- <el-col :span="4" style="margin:10px">
+  <div id="userInfo">
+    <el-contarner>
+      <el-header>
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item :to="{path:'/'}">首页</el-breadcrumb-item>
+          <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+        </el-breadcrumb>
+      </el-header>
+      <el-main>
+        <el-row>
+          <el-col :span="8">
+            <div class="title">个人信息</div>
+            <el-row>
+              <!-- <el-col :span="4" style="margin:10px">
               <template>账号ID：{{id}}</template>
-            </el-col>-->
-            <!-- <el-col :span="12">
+              </el-col>-->
+              <!-- <el-col :span="12">
                 <div class="info">
                 <div>账号ID：</div>
                 <div>创建日期：</div>
@@ -45,82 +38,74 @@
                 <div>**********</div>
                 <div>18600000000</div>
                 <div>XX@example.com</div>
-            </div>-->
-            <!-- </el-col> -->
-          </el-row>
-          <!-- <el-row>
+              </div>-->
+              <!-- </el-col> -->
+            </el-row>
+            <!-- <el-row>
             <el-col :span="4">
               <span>创建日期：</span>
             </el-col>
             <el-col :span="6">{{dateFormat}}</el-col>
-          </el-row>-->
-          <el-row>
-            <el-form label-width="80px" :model="information" style="margin:40px 0;">
-              <el-form-item label="账号id：">
-                <template>{{id}}</template>
-              </el-form-item>
-              <el-form-item label="创建日期:">
-                <template>{{createDate}}</template>
-              </el-form-item>
-              <el-form-item label="用户名称:">
-                <el-input v-model="information.name" disabled="true"></el-input>
-              </el-form-item>
-              <el-form-item label="登录密码:">
-                <el-input v-model="information.code" disabled="true"></el-input>
-              </el-form-item>
-              <el-form-item label="手机号:">
-                <el-input v-model="information.phone" disabled="true"></el-input>
-              </el-form-item>
-              <el-form-item label="电子邮箱:">
-                <el-input v-model="information.email" disabled="true"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" icon="el-icon" @click="updateinfo">修改信息</el-button>
-                <el-button type="primary" icon="el-icon" @click="save" >保存</el-button>
-              </el-form-item>
-            </el-form>
-          </el-row>
-        </el-col>
-        <el-col :span="8">
-          <!--  <div class="userimg">
+            </el-row>-->
+            <el-row>
+              <el-form label-width="80px" :model="information" style="margin:40px 0;">
+                <el-form-item label="账号id：">
+                  <template>{{id}}</template>
+                </el-form-item>
+                <el-form-item label="创建日期:">
+                  <template>{{createDate}}</template>
+                </el-form-item>
+                <el-form-item label="用户名称:">
+                  <el-input v-model="information.name" disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="登录密码:">
+                  <el-input v-model="information.code" disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="手机号:">
+                  <el-input v-model="information.phone" disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="电子邮箱:">
+                  <el-input v-model="information.email" disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" icon="el-icon" @click="updateinfo">修改信息</el-button>
+                  <el-button type="primary" icon="el-icon" @click="save">保存</el-button>
+                </el-form-item>
+              </el-form>
+            </el-row>
+          </el-col>
+          <el-col :span="8">
+            <!--  <div class="userimg">
             <img src="https://img.xiaopiu.com/userImages/img7159694579f0.jpeg" alt />
           </div>
-          <el-button type="primary" icon="el-icon" @click="updateimg">上传头像</el-button>-->
-          <div>
-            <el-row>
-              <el-upload
-                class="avatar-uploader"
-                action="后台接口地址"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :on-remove="handleRemove"
-                :before-upload="beforeAvatarUpload"
-              >
-                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-                <span v-if="imageUrl" class="el-upload-action" @click.stop="handleRemove()">
-                  <i class="el-icon-delete"></i>
-                </span>
-                <i v-else class="el-icon-upload2 avatar-uploader-icon" stop></i>
-              </el-upload>
-            </el-row>
-          </div>
-        </el-col>
-      </el-row>
-=======
-    <div id="userInfo">
-        <el-contarner>
-            <el-header>
-                <el-breadcrumb separator="/">
-                    <el-breadcrumb-item :to="{path:'/'}">首页</el-breadcrumb-item>
-                    <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-                </el-breadcrumb>
-            </el-header>
-            <el-main>
-                
-            </el-main>
-        </el-contarner>
->>>>>>> d3a6104e677e87982283f3e0c442db8c0c27abac
-    </div>
+            <el-button type="primary" icon="el-icon" @click="updateimg">上传头像</el-button>-->
+            <div>
+              <el-row>
+                <el-upload
+                  class="avatar-uploader"
+                  action="后台接口地址"
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess"
+                  :on-remove="handleRemove"
+                  :before-upload="beforeAvatarUpload"
+                >
+                  <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                  <span v-if="imageUrl" class="el-upload-action" @click.stop="handleRemove()">
+                    <i class="el-icon-delete"></i>
+                  </span>
+                  <i v-else class="el-icon-upload2 avatar-uploader-icon" stop></i>
+                </el-upload>
+              </el-row>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-button @click="routerTo('/dashboard')" type="text">返回主页</el-button>
+          </el-col>
+        </el-row>
+      </el-main>
+    </el-contarner>
   </div>
 </template>
 
@@ -192,7 +177,6 @@ export default {
 </script>
 
 <style scoped>
-<<<<<<< HEAD
 .el-header {
   text-align: right;
   font-size: 18px;
@@ -266,7 +250,4 @@ export default {
   background-color: #000;
   background-color: rgba(0, 0, 0, 0.3);
 }
-=======
-
->>>>>>> d3a6104e677e87982283f3e0c442db8c0c27abac
 </style>
