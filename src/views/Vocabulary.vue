@@ -197,10 +197,9 @@ export default {
       WordTable: [], //词汇列表
       VisibleNewDialog: false,
       VisibleDelDialog: false,
-      VisibleAddWord: false,
+      VisibleAddWord: false,//新增词汇
       //================
-      VisibleAddWords: false,
-      //===========
+      VisibleAddWords: false,//导入词汇
       vcbform: { name: "" }, //新增词表
       inputNewWords: [""],
       VisibleDelWord: false,
@@ -481,17 +480,12 @@ export default {
         this.tableLoading = false;
         this.showRemoveFile = true;
         // this.WordTable = [...this.WordTable, ...results];
-        this.import();
-        //====================
+        this.import(results);
         this.VisibleAddWords = false;
       };
-    },
-    
-    import(){
-      this.axios.post('/ccc',{
-        words:this.results
-      }  
-        )
+    },   
+    import(words){
+      this.axios.post('/ccc',words)
         .then(data => {
           this.getWordInfo();
         })

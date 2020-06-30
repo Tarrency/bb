@@ -111,31 +111,27 @@
           </el-form>
         </el-dialog>
         <!-- 编辑按钮 -->
-        <el-dialog title="修改问答" :visible.sync="VisibleModify" class="dialog">
-          <el-form>
+        <el-dialog title="修改问答" :visible.sync="VisibleAddQA" class="dialog">
+          <el-form :model="QAmodify">
             <el-form-item label="所属问答库：">
               <nobr v-for="v in QAlibrary" v-show="v.id == QAlibraryid" :key="v.id">{{v.name}}</nobr>
             </el-form-item>
-            <el-form-item label="修改问题:">
-              <el-col :span="24" v-for="(question,index) in inputQuestion" :key="index">
-                <!-- <el-row :gutter="20" class="margins">
-                <el-col :span="14">-->
-                <el-input v-model="inputQuestion[index]" autocomplete="off"></el-input>
-                <!-- </el-col>
-                </el-row>-->
+            <el-form-item label="修改问题:" :prop="newQuestion">
+              <el-col :span="24">
+                <el-input v-model="QAmodify.newQuestion" autocomplete="off"></el-input>
               </el-col>
             </el-form-item>
-            <el-form-item label="修改回答:">
-              <el-col :span="24" v-for="(answer,index) in inputAnswer" :key="index">
-                <el-input v-model="inputAnswer[index]" autocomplete="off"></el-input>
+            <el-form-item label="修改回答:" :prop="newAnswer">
+              <el-col :span="24" >
+                <el-input v-model="QAmodify.newAnswer" autocomplete="off"></el-input>
               </el-col>
             </el-form-item>
-            <el-form-item label="修改类型:">
-              <el-col :span="24" v-for="(type,index) in inputType" :key="index">
-                <el-input v-model="inputType[index]" autocomplete="off"></el-input>
+            <el-form-item label="修改类型:" :prop="newType">
+              <el-col :span="24" >
+                <el-input v-model="QAmodify.newType" autocomplete="off"></el-input>
               </el-col>
             </el-form-item>
-            <el-form-item>
+           <el-form-item>
               <el-button type="primary" @click="modifyQA">确定</el-button>
               <el-button @click="VisibleModify = false">取消</el-button>
             </el-form-item>
@@ -165,23 +161,26 @@
         </el-dialog>
         <!--逐条新增按钮-->
         <el-dialog title="新增问答" :visible.sync="VisibleAddQA" class="dialog">
-          <el-form>
+          <el-form :model="inputQA">
             <el-form-item label="所属问答库：">
               <nobr v-for="v in QAlibrary" v-show="v.id == QAlibraryid" :key="v.id">{{v.name}}</nobr>
             </el-form-item>
-            <el-form-item label="新增问题:">
-              <el-col :span="24" v-for="(question,index) in inputQuestion" :key="index">
+            <el-form-item label="新增问题:" :prop="question">
+              <!-- <el-col :span="24" v-for="(question,index) in inputQuestion" :key="index">
                 <el-input v-model="inputQuestion[index]" autocomplete="off"></el-input>
+              </el-col> -->
+              <el-col :span="24">
+                <el-input v-model="inputQA.question" autocomplete="off"></el-input>
               </el-col>
             </el-form-item>
-            <el-form-item label="新增回答:">
-              <el-col :span="24" v-for="(answer,index) in inputAnswer" :key="index">
-                <el-input v-model="inputAnswer[index]" autocomplete="off"></el-input>
+            <el-form-item label="新增回答:" :prop="answer">
+              <el-col :span="24" >
+                <el-input v-model="inputQA.answer" autocomplete="off"></el-input>
               </el-col>
             </el-form-item>
-            <el-form-item label="类型:">
-              <el-col :span="24" v-for="(type,index) in inputType" :key="index">
-                <el-input v-model="inputType[index]" autocomplete="off"></el-input>
+            <el-form-item label="类型:" :prop="type">
+              <el-col :span="24" >
+                <el-input v-model="inputQA.type" autocomplete="off"></el-input>
               </el-col>
             </el-form-item>
             <el-form-item>
@@ -235,24 +234,32 @@ export default {
       //================
       VisibleAddQAs: false,
       QAform: { name: "" }, //新增问答库
-      //inputNewWords: [""],
       //新增问答
-      inputQuestion: [""],
-      inputAnswer: [""],
-      inputType: [""],
+      inputQA:{
+        question:"",
+        answer:"",
+        type:""
+      },
+      QAmodify:{
+        newQuestion:"",
+        newAnswer:"",
+        newType:""
+      },//修改编辑
+      // inputQuestion: [""],
+      // inputAnswer: [""],
+      // inputType: [""],
       VisibleDelQA: false,
-      // WordsModify: "",
-      //修改编辑
-      // QAmodify :"",
-      QuestionModify: "",
-      AnswerModify: "",
-      TypeModify: "",
+      // QuestionModify: "",
+      // AnswerModify: "",
+      // TypeModify: "",
       VisibleModify: false,
       RowSeleted: [], //当前选中行
       IdSeleted: [], //当前选中id集合
-      ShowinfoSeleted: [], //当前选中单词集合
+      ShowQuestionSeleted: [], //当前选中问题集合
+      ShowAnswerSeleted:[],
+      ShowTypeSeleted:[],
       selectAllBtn: "全选",
-      //   ================
+      //upload
       uploadLoading: false,
       progressPercent: 0,
       showProgress: false,
@@ -332,9 +339,7 @@ export default {
         .post(
           "/eee" ,{
             id: this.QAlibraryid,
-            question:this.inputQuestion,
-            answer: this.inputAnswer,
-            type:this.inputType
+            tabData:this.inputQA
           }
         )
         .then(data => {
@@ -374,18 +379,19 @@ export default {
       this.axios
         .post("/bbb", {
           wordID: row.id,
-          newQuestion: this.QuestionModify,
-          newAnswer: this.AnswerModify,
-          newType: this.TypeModify
+          newData:this.QAmodify,
+          // newQuestion: this.QuestionModify,
+          // newAnswer: this.AnswerModify,
+          // newType: this.TypeModify
         })
         .then(
           (row.edit = !row.edit),
-          (row.question = this.QuestionModify),
-          (this.QuestionModify = ""),
-          (row.answer = this.AnswerModify),
-          (this.AnswerModify = ""),
-          (row.type = this.TypeModify),
-          (this.TypeModify = ""),
+          (row.question = this.QAmodify.newQuestion),
+          (this.QAmodify.newQuestion = ""),
+          (row.answer = this.QAmodify.newAnswer),
+          (this.QAmodify.newAnswer = ""),
+          (row.type = this.QAmodify.newType),
+          (this.QAmodify.newType = ""),
           this.$set(this.QATable, index, this.QATable[index]), //重新加载本行数据
           (this.VisibleModify = false)
         )
@@ -394,19 +400,27 @@ export default {
         });
       this.$set(this.QATable, index, this.QATable[index]); //重新加载本行数据
     },
-    //删除词汇
+    //删除问答
     deleteQABtn(row) {
       console.log("row", row);
       if (!row) {
         this.IdSeleted = [];
-        this.ShowinfoSeleted = [];
+        this.ShowQuestionSeleted = [];
+        this.ShowAnswerSeleted = [];
+        this.ShowTypeSeleted = [];
         this.RowSeleted.forEach((item, index) => {
           this.IdSeleted = this.IdSeleted.concat(item.id);
-          this.ShowinfoSeleted = this.ShowinfoSeleted.concat(item.word);
-          this.ShowinfoSeleted.slice(-1);
+          this.ShowQuestionSeleted= this.ShowQuestionSeleted.concat(item.question);
+          this.ShowQuestionSeleted.slice(-1);
+          this.ShowAnswerSeleted= this.ShowAnswerSeleted.concat(item.answer);
+          this.ShowAnswerSeleted.slice(-1);
+          this.ShowTypeSeleted = this.ShowTypeSeleted.concat(item.type);
+          this.ShowTypeSeleted.slice(-1);
         });
       } else {
-        this.ShowinfoSeleted = '"' + row.word + '"';
+        this.ShowQuestionSeleted = '"' + row.question + '"';
+        this.ShowAnswerSeleted='"'+row.answer+'"';
+        this.ShowTypeSeleted='"'+row.type+'"';
         this.IdSeleted.push(row.id);
       }
       console.log("删除单词", this.IdSeleted);
@@ -418,7 +432,9 @@ export default {
         .then(data => {
           this.RowSeleted = [];
           this.IdSeleted = [];
-          this.ShowinfoSeleted = "";
+          this.ShowQuestionSeleted= "";
+          this.ShowAnswerSeleted="";
+          this.ShowTypeSeleted="";
           this.getQAInfo();
         })
         .catch(err => {
@@ -451,11 +467,11 @@ export default {
     getExcel(res) {
       require.ensure([], () => {
         const { export_json_to_excel } = require("../excel/Export2Excel.js");
-        const tHeader = ["id", "词汇", "更新时间"];
-        const filterVal = ["id", "word", "update_time"];
+        const tHeader = ["id", "问题", "回答","类型","更新时间"];
+        const filterVal = ["id", "question","answer","type", "update_time"];
         const list = this.RowSeleted;
         const data = this.formatJson(filterVal, list);
-        export_json_to_excel(tHeader, data, "导出列表名称");
+        export_json_to_excel(tHeader, data, "导出问答列表");
       });
     },
     //require后面加相对路径用于引入本地模块或json文件

@@ -6,6 +6,5 @@ mock.mock(" http://localhost:8081/QAmanager", {
             "id": 1,
             "word": "apple"
         }]
-
     })
     //
