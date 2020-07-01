@@ -4,12 +4,14 @@ import router from "./router";
 import store from "./store";
 import ElementUI from "element-ui";
 import axios from "axios";
-import VueAxios from 'vue-axios'
-import moment from 'moment'
-import qs from 'qs'
+import VueAxios from 'vue-axios';
+import moment from 'moment';
 import Chat from 'jwchat';
+import echarts from 'echarts';
 
-require('./assets/mock.js')
+Vue.prototype.$echarts = echarts;
+require('./assets/mock.js');
+
 
 Vue.use(Chat) // 测试界面的聊天窗口
 Vue.use(VueAxios, axios)

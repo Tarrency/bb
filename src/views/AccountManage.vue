@@ -1,6 +1,6 @@
 <template>
   <div id="userInfo">
-    <el-contarner>
+    <el-container>
       <el-header>
         <el-breadcrumb separator="/">
           <el-breadcrumb-item :to="{path:'/'}">首页</el-breadcrumb-item>
@@ -9,13 +9,13 @@
       </el-header>
       <el-main>
         <el-row>
-          <el-col :span="8">
+          <el-col :span="12">
             <div class="title">个人信息</div>
-            <el-row>
-              <!-- <el-col :span="4" style="margin:10px">
+            <!-- <el-row> -->
+            <!-- <el-col :span="4" style="margin:10px">
               <template>账号ID：{{id}}</template>
-              </el-col>-->
-              <!-- <el-col :span="12">
+            </el-col>-->
+            <!-- <el-col :span="12">
                 <div class="info">
                 <div>账号ID：</div>
                 <div>创建日期：</div>
@@ -38,9 +38,9 @@
                 <div>**********</div>
                 <div>18600000000</div>
                 <div>XX@example.com</div>
-              </div>-->
-              <!-- </el-col> -->
-            </el-row>
+            </div>-->
+            <!-- </el-col> -->
+            <!-- </el-row> -->
             <!-- <el-row>
             <el-col :span="4">
               <span>创建日期：</span>
@@ -49,29 +49,29 @@
             </el-row>-->
             <el-row>
               <el-form label-width="80px" :model="information" style="margin:40px 0;">
-                <el-form-item label="账号id：">
-                  <template>{{id}}</template>
-                </el-form-item>
-                <el-form-item label="创建日期:">
-                  <template>{{createDate}}</template>
-                </el-form-item>
-                <el-form-item label="用户名称:">
-                  <el-input v-model="information.name" disabled="true"></el-input>
-                </el-form-item>
-                <el-form-item label="登录密码:">
-                  <el-input v-model="information.code" disabled="true"></el-input>
-                </el-form-item>
-                <el-form-item label="手机号:">
-                  <el-input v-model="information.phone" disabled="true"></el-input>
-                </el-form-item>
-                <el-form-item label="电子邮箱:">
-                  <el-input v-model="information.email" disabled="true"></el-input>
-                </el-form-item>
-                <el-form-item>
-                  <el-button type="primary" icon="el-icon" @click="updateinfo">修改信息</el-button>
-                  <el-button type="primary" icon="el-icon" @click="save">保存</el-button>
-                </el-form-item>
-              </el-form>
+                  <el-form-item label="账号id：">
+                    <template>{{id}}</template>
+                  </el-form-item>
+                  <el-form-item label="创建日期:">
+                    <template>{{createDate}}</template>
+                  </el-form-item>
+                  <el-form-item label="用户名称:">
+                    <el-input v-model="information.name" v-bind:disabled="isDisabled"></el-input>
+                  </el-form-item>
+                  <el-form-item label="登录密码:">
+                    <el-input v-model="information.code" v-bind:disabled="isDisabled"></el-input>
+                  </el-form-item>
+                  <el-form-item label="手机号:">
+                    <el-input v-model="information.phone" v-bind:disabled="isDisabled"></el-input>
+                  </el-form-item>
+                  <el-form-item label="电子邮箱:">
+                    <el-input v-model="information.email" v-bind:disabled="isDisabled"></el-input>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button type="primary" icon="el-icon" @click="updateinfo">修改信息</el-button>
+                    <el-button type="primary" icon="el-icon" @click="save">保存</el-button>
+                  </el-form-item>
+                </el-form>
             </el-row>
           </el-col>
           <el-col :span="8">
@@ -105,7 +105,7 @@
           </el-col>
         </el-row>
       </el-main>
-    </el-contarner>
+    </el-container>
   </div>
 </template>
 
@@ -121,12 +121,16 @@ export default {
         code: "9999",
         phone: "8888",
         email: "6666"
-      }
+      },
+      isDisabled:true,
     };
   },
   methods: {
     //上传头像
     // 移除图片
+    routerTo(a) {
+      this.$router.push(a);
+    },
     handleRemove() {
       this.imageUrl = "";
     },
@@ -152,10 +156,7 @@ export default {
     },
     //修改保存信息
     updateinfo() {
-      var rs = document.querySelectorAll("input[disabled='true']");
-      for (var i = 0; i < rs.length; i++) {
-        rs[i].disabled = false;
-      }
+       this.isDisabled=false
     },
     save() {
       this.axios
@@ -167,7 +168,7 @@ export default {
             email: ""
           }
         })
-        .then()
+        .then(this.isDisabled=true)
         .catch(err => {
           console.log("请求失败:" + err.status + "," + err.statusText);
         });

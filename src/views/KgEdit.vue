@@ -29,19 +29,18 @@
             </el-col>
             <el-col :span="6">
               <el-button type="primary" size="small" @click="testinput">查询</el-button>
-              <el-button size="small"  @click="reset">取消</el-button>
+              <el-button size="small" @click="reset">取消</el-button>
             </el-col>
+          </el-row>
+          <el-row>
+            <div class="kg" id="kg_show"></div>
           </el-row>
           <el-row>
             <!-- 单词表格 -->
             <el-col :span="8">
-              <el-row size="small" style="line-height:20px" >节点列表</el-row>
+              <el-row size="small" style="line-height:20px">节点列表</el-row>
               <el-row>
-                <el-table
-                  :data="NodeList"
-                  @selection-change="handleSelectionChange"
-                  size="small"
-                >
+                <el-table :data="NodeList" @selection-change="handleSelectionChange" size="small">
                   <el-table-column type="selection" width="55" label="全选"></el-table-column>
                   <el-table-column prop="id" label="id"></el-table-column>
                   <el-table-column prop="type" label="类型"></el-table-column>
@@ -55,7 +54,7 @@
             <el-col :span="8">
               <el-row size="small" style="line-height:20px">节点类型</el-row>
               <el-row>
-                <el-table :data="NodeType" size="small" >
+                <el-table :data="NodeType" size="small">
                   <el-table-column prop="property" label="属性"></el-table-column>
                   <el-table-column prop="content" label="内容"></el-table-column>
                 </el-table>
@@ -70,10 +69,7 @@
             <el-col :span="8">
               <el-row size="small" style="line-height:20px">关联节点</el-row>
               <el-row>
-                <el-table
-                  :data="relatives"
-                  size="small"
-                >
+                <el-table :data="relatives" size="small">
                   <el-table-column prop="relation" label="关系"></el-table-column>
                   <el-table-column prop="id" label="id"></el-table-column>
                   <el-table-column prop="name" label="名称"></el-table-column>
@@ -94,19 +90,163 @@
 </template>
 
 <script>
+import echarts from "echarts";
 export default {
-    data(){
-        return {
-            options:[],
-            NodeList: [],
-            NodeType: [],
-            relatives: [],
-        }
+  data() {
+    return {
+      options: [],
+      NodeList: [],
+      NodeType: [],
+      relatives: []
+    };
+  },
+  mounted() {
+    this.drawKg();
+  },
+  methods: {
+    drawkg(){
+      this.axios.get('/aaa',webkitDep).then(
+        res=>{this.draw(res)}
+      ).catch(err=>{console.log("请求失败:" + err.status + "," + err.statusText);})
     },
-    methods:{
-
+    draw(webkitDep) {
+      let myChart = this.$echarts.init(document.getElementById("kg_show"));
+      myChart.setOption({
+        legend: [
+          {
+            x: "left", //图例位置
+            //data:['人物', '组织', '科技产品', '工程', '称号', '荣誉',
+            //    '品牌', '业务', '事件', '技术', '其他']     //关系图中需要与series中的categories的name保持一致
+            data: webkitDep.legend_data
+          }
+        ],
+        series: [
+          {
+            type: "graph",
+            layout: "force",
+            animation: false,
+            label: {
+              position: "right",
+              formatter: "{b}"
+            },
+            label: {
+              show: true
+            },
+            draggable: true, //指示节点是否可以拖动
+            data: webkitDep.nodes.map(function(node, idx) {
+              node.id = idx;
+              return node;
+            }),
+            categories: webkitDep.categories,
+            force: {
+              edgeLength: 80,
+              repulsion: 1500,
+              gravity: 0.2
+            },
+            edges: webkitDep.links,
+            edgeLabel: {
+              //线条的边缘标签
+              normal: {
+                show: true,
+                textStyle: {
+                  fontSize: 12,
+                  color: "#000000"
+                },
+                formatter: function(param) {
+                  // 标签内容
+                  console.log(param);
+                  return param.data.name;
+                }
+              }
+            },
+            roam: true,
+            lineStyle: {
+              normal: {
+                show: true,
+                width: 2,
+                color: "source", //决定边的颜色是与起点相同还是与终点相同
+                curveness: 0.1 //边的曲度，支持从 0 到 1 的值，值越大曲度越大。
+              }
+            },
+            edgeSymbol: ["circle", "arrow"],
+            edgeSymbolSize: [5, 12], //边两端的标记大小
+            symbolSize: 30 //节点大小
+          }
+        ]
+      });
     }
-}
+  }
+};
+// var myChart = echarts.init(document.getElementById("kg_show"));
+// myChart.showLoading();
+// $.get("/kg", function(webkitDep) {
+//   console.log(webkitDep);
+//   myChart.hideLoading();
+//   option = {
+//     legend: [
+//       {
+//         x: "left", //图例位置
+//         //data:['人物', '组织', '科技产品', '工程', '称号', '荣誉',
+//         //    '品牌', '业务', '事件', '技术', '其他']     //关系图中需要与series中的categories的name保持一致
+//         data: webkitDep.legend_data
+//       }
+//     ],
+//     series: [
+//       {
+//         type: "graph",
+//         layout: "force",
+//         animation: false,
+//         label: {
+//           position: "right",
+//           formatter: "{b}"
+//         },
+//         label: {
+//           show: true
+//         },
+//         draggable: true, //指示节点是否可以拖动
+//         data: webkitDep.nodes.map(function(node, idx) {
+//           node.id = idx;
+//           return node;
+//         }),
+//         categories: webkitDep.categories,
+//         force: {
+//           edgeLength: 80,
+//           repulsion: 1500,
+//           gravity: 0.2
+//         },
+//         edges: webkitDep.links,
+//         edgeLabel: {
+//           //线条的边缘标签
+//           normal: {
+//             show: true,
+//             textStyle: {
+//               fontSize: 12,
+//               color: "#000000"
+//             },
+//             formatter: function(param) {
+//               // 标签内容
+//               console.log(param);
+//               return param.data.name;
+//             }
+//           }
+//         },
+//         roam: true,
+//         lineStyle: {
+//           normal: {
+//             show: true,
+//             width: 2,
+//             color: "source", //决定边的颜色是与起点相同还是与终点相同
+//             curveness: 0.1 //边的曲度，支持从 0 到 1 的值，值越大曲度越大。
+//           }
+//         },
+//         edgeSymbol: ["circle", "arrow"],
+//         edgeSymbolSize: [5, 12], //边两端的标记大小
+//         symbolSize: 30 //节点大小
+//       }
+//     ]
+//   };
+//   myChart.setOption(option);
+// });
 </script>
 <style scoped>
 .el-header {
@@ -122,5 +262,13 @@ export default {
   width: 50%;
   text-align: center;
   float: center;
+}
+.kg {
+  position: absolute;
+  /*left: 25%;*/
+  height: 100%;
+  width: 100%;
+  background: #ffffff;
+  white-space: pre-wrap;
 }
 </style scoped>

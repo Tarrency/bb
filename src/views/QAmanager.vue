@@ -25,7 +25,6 @@
             </el-col>
             <el-col :span="8" style="float:right;text-align:right">
               <el-button type="primary" size="small" @click="VisibleNewDialog=true">新增问答库</el-button>
-
               <el-button size="small" @click="VisibleDelDialog=checkQAlibraryId()">删除问答库</el-button>
             </el-col>
           </el-row>
@@ -88,7 +87,6 @@
               <el-button type="danger" size="small" plain @click="deleteQABtn()">删除</el-button>
               <!-- =================== -->
               <el-button type="primary" size="small" @click="VisibleAddQAs= checkQAlibraryId()">批量导入</el-button>
-              <!-- ============================= -->
               <el-button type="primary" size="small" @click="getExcel(QATable)">导出</el-button>
             </el-col>
           </el-row>
@@ -333,7 +331,6 @@ export default {
           console.log("请求失败:" + err.status + "," + err.statusText);
         });
     },
-    
     //新增问答
     addQA() {
       this.axios

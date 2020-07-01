@@ -1,5 +1,6 @@
 <template>
-    <div>
+   <el-container>
+        <div>
         <link rel="stylesheet" href="./src/assets/css/semantic.css">
         <div id="dashboardpage" class="ui inverted blue segment">
             <h1>用户组件</h1>
@@ -19,11 +20,32 @@
                     </div>
                 </div>
             </div>
-
+            <!-- <el-row :span="24">
+                <el-col :span="8">
+                    <div id="visit"></div>
+                </el-col>
+                <el-col :span="8">
+                    <div id="precision"></div>
+                </el-col>
+                <el-col :span="8">
+                    <div id="interest"></div>
+                </el-col>
+            </el-row>
+            <el-row :span="24">
+                <el-col :span="8">
+                    <div id="hotSpot"></div>
+                </el-col>
+                <el-col :span="8">
+                    <div id="distribution"></div>
+                </el-col>
+                <el-col :span="8">
+                    <div id="addWord"></div>
+                </el-col>
+            </el-row> -->
             <div id="myChart" :style="{width: '300px', height: '300px'}"></div>
         </div>
     </div>
-
+   </el-container>
 </template>
 
 <script>
