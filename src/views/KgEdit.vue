@@ -35,53 +35,61 @@
           <el-row>
             <div class="kg" id="kg_show"></div>
           </el-row>
+          <!-- 单词表格 -->
           <el-row>
-            <!-- 单词表格 -->
-            <el-col :span="8">
-              <el-row size="small" style="line-height:20px">节点列表</el-row>
-              <el-row>
-                <el-table :data="NodeList" @selection-change="handleSelectionChange" size="small">
-                  <el-table-column type="selection" width="55" label="全选"></el-table-column>
-                  <el-table-column prop="id" label="id"></el-table-column>
-                  <el-table-column prop="type" label="类型"></el-table-column>
-                  <el-table-column prop="name" label="名称"></el-table-column>
-                </el-table>
+            <el-row  style="line-height:20px;">
+              <el-col :span="4" :offset="11">节点列表</el-col>
+            </el-row>
+            <el-row>
+              <el-table :data="NodeList" @selection-change="handleSelectionChange" >
+                <el-table-column type="selection" width="55" label="全选"></el-table-column>
+                <el-table-column prop="id" label="id"></el-table-column>
+                <el-table-column prop="type" label="类型"></el-table-column>
+                <el-table-column prop="name" label="名称"></el-table-column>
+              </el-table>
+            </el-row>
+            <el-row :span="8" style="float:right;text-align:right">
+              <el-button type="primary" size="small" @click="detail">查看详情</el-button>
+            </el-row>
+          </el-row>
+          <el-row>
+            <div v-show="VisibleType">
+              <el-row  style="line-height:20px">
+                <el-col :span="4" :offset="11">节点类型</el-col>
               </el-row>
-              <el-row style="float:left">
-                <el-button type="primary" size="small" @click="detail">查看详情</el-button>
-              </el-row>
-            </el-col>
-            <el-col :span="8">
-              <el-row size="small" style="line-height:20px">节点类型</el-row>
               <el-row>
-                <el-table :data="NodeType" size="small">
+                <el-table :data="NodeType" >
                   <el-table-column prop="property" label="属性"></el-table-column>
                   <el-table-column prop="content" label="内容"></el-table-column>
                 </el-table>
               </el-row>
               <el-row>
-                <el-col style="float:right;margin:16px 0;" text-align="right">
-                  <el-button type="primary" size="small" @click="clear">清空</el-button>
-                  <el-button type="primary" size="small" @click="rebuild">新建</el-button>
+                <el-col :span="8" style="float:right;text-align:right">
+                  <el-button type="primary"  size="small" @click="clear">清空</el-button>
+                  <el-button type="primary"  size="small" @click="rebuild">新建</el-button>
                 </el-col>
               </el-row>
-            </el-col>
-            <el-col :span="8">
-              <el-row size="small" style="line-height:20px">关联节点</el-row>
+            </div>
+          </el-row>
+          <el-row>
+            <div v-show="VisibleRelation">
+              <el-row style="line-height:20px">
+                <el-col :span="4" :offset="11">关联节点</el-col>
+              </el-row>
               <el-row>
-                <el-table :data="relatives" size="small">
+                <el-table :data="relatives" >
                   <el-table-column prop="relation" label="关系"></el-table-column>
                   <el-table-column prop="id" label="id"></el-table-column>
                   <el-table-column prop="name" label="名称"></el-table-column>
                 </el-table>
               </el-row>
               <el-row>
-                <el-col style="float:right">
+                <el-col :span="8" style="float:right;text-align:right">
                   <el-button type="primary" size="small" @click="modify">修改</el-button>
                   <el-button type="primary" size="small" @click="remove">删除</el-button>
                 </el-col>
               </el-row>
-            </el-col>
+            </div>
           </el-row>
         </div>
       </el-main>
@@ -97,17 +105,28 @@ export default {
       options: [],
       NodeList: [],
       NodeType: [],
-      relatives: []
+      relatives: [],
+      VisibleType: false,
+      VisibleRelation: false
     };
   },
   mounted() {
     this.drawKg();
   },
   methods: {
-    drawkg(){
-      this.axios.get('/aaa',webkitDep).then(
-        res=>{this.draw(res)}
-      ).catch(err=>{console.log("请求失败:" + err.status + "," + err.statusText);})
+    detail() {
+      this.VisibleType = true;
+      this.VisibleRelation = true;
+    },
+    drawkg() {
+      this.axios
+        .get("/aaa", res)
+        .then(res => {
+          this.draw(res);
+        })
+        .catch(err => {
+          console.log("请求失败:" + err.status + "," + err.statusText);
+        });
     },
     draw(webkitDep) {
       let myChart = this.$echarts.init(document.getElementById("kg_show"));

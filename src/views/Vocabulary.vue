@@ -13,7 +13,9 @@
           <!-- 主要内容区 -->
           <div>
             <el-row>
-              <el-col :span="3" style="float:left" ><span>词表名称</span></el-col>
+              <el-col :span="3" style="float:left">
+                <span>词表名称</span>
+              </el-col>
               <el-col :span="8" style="float:left">
                 <el-radio-group v-model="vocabularyid" @change="getWordInfo">
                   <el-radio-button
@@ -79,19 +81,13 @@
             </el-row>
             <el-row>
               <el-col :span="4" style="float:left;text-align:left">
-                <el-button
-                  type="primary"
-                  @click="selectAll(WordTable)"
-                >{{selectAllBtn}}</el-button>
+                <el-button type="primary" @click="selectAll(WordTable)">{{selectAllBtn}}</el-button>
               </el-col>
               <el-col :span="12" style="float:right;text-align:right">
-                <el-button
-                  type="primary"
-                  @click="VisibleAddWord= checkVocaburalyId()"
-                >新增</el-button>
-                <el-button  type="danger" plain @click="deleteWordBtn()">删除</el-button>
+                <el-button type="primary" @click="VisibleAddWord= checkVocaburalyId()">新增</el-button>
+                <el-button type="danger" plain @click="deleteWordBtn()">删除</el-button>
                 <!-- =================== -->
-                <el-button type="primary"  @click="VisibleAddWords= checkVocaburalyId()">导入</el-button>
+                <el-button type="primary" @click="VisibleAddWords= checkVocaburalyId()">导入</el-button>
                 <!-- ============================= -->
                 <el-button type="primary" @click="getExcel(WordTable)">导出</el-button>
               </el-col>
@@ -110,7 +106,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="newVocaburaly">确定</el-button>
-                <el-button  @click="VisibleNewDialog=false">取消</el-button>
+                <el-button @click="VisibleNewDialog=false">取消</el-button>
               </el-form-item>
             </el-form>
           </el-dialog>
@@ -127,9 +123,8 @@
               :key="v.id"
             >{{v.name}}</nobr>
             ”?
-            <br />
-            <el-button style="float:right" type="primary" @click="delVocaburaly">确定</el-button>
-            <el-button style="float:right" @click="VisibleDelDialog = false">取消</el-button>
+            <el-button type="primary" @click="delVocaburaly">确定</el-button>
+            <el-button @click="VisibleDelDialog = false">取消</el-button>
           </el-dialog>
           <!--新增按钮-->
           <el-dialog title="新增词汇" :visible.sync="VisibleAddWord" class="dialog">
@@ -160,24 +155,27 @@
           </el-dialog>
           <!--导入弹框-->
           <el-dialog title="导入词汇" :visible.sync="VisibleAddWords" class="dialog">
-             <el-form>
+            <el-form>
               <el-form-item label="所属词表：">
                 <nobr v-for="v in vocabulary" v-show="v.id == vocabularyid" :key="v.id">{{v.name}}</nobr>
               </el-form-item>
               <el-form-item>
                 <el-upload action :before-upload="handleBeforeUpload" accept=".xls, .xlsx">
-                    <el-button type="primary"  :loading="uploadLoading" @click="handleUploadFile">确定</el-button>
+                  <el-button type="primary" :loading="uploadLoading" @click="handleUploadFile">确定</el-button>
                 </el-upload>
                 <el-button @click="VisibleAddWords = false">取消</el-button>
               </el-form-item>
-             </el-form>
+            </el-form>
           </el-dialog>
           <!--删除按钮-->
-          <el-dialog title="删除单词" :visible.sync="VisibleDelWord"
-            style="width:50%;text-align:center">
+          <el-dialog
+            title="删除单词"
+            :visible.sync="VisibleDelWord"
+            style="width:50%;text-align:center"
+          >
             删除不可恢复，您确定要删除单词{{ShowinfoSeleted}}
-            <el-button  type="primary" @click="deleteWords">确定</el-button>
-            <el-button  @click="VisibleDelWord = false">取消</el-button>
+            <el-button type="primary" @click="deleteWords">确定</el-button>
+            <el-button @click="VisibleDelWord = false">取消</el-button>
           </el-dialog>
         </el-main>
       </el-container>
@@ -197,9 +195,9 @@ export default {
       WordTable: [], //词汇列表
       VisibleNewDialog: false,
       VisibleDelDialog: false,
-      VisibleAddWord: false,//新增词汇
+      VisibleAddWord: false, //新增词汇
       //================
-      VisibleAddWords: false,//导入词汇
+      VisibleAddWords: false, //导入词汇
       vcbform: { name: "" }, //新增词表
       inputNewWords: [""],
       VisibleDelWord: false,
@@ -214,10 +212,11 @@ export default {
       showProgress: false,
       showRemoveFile: false,
       file: null,
-      tableLoading: false
+      tableLoading: false,
     };
   },
-  mounted() {//钩子函数
+  mounted() {
+    //钩子函数
     this.getVcabularyInfo();
   },
   methods: {
@@ -362,9 +361,7 @@ export default {
     },
     deleteWords() {
       this.axios
-        .delete(
-          "./vocabulary/deleteWords?wordIDs=" + this.IdSeleted.join(",")
-        )
+        .delete("./vocabulary/deleteWords?wordIDs=" + this.IdSeleted.join(","))
         .then(data => {
           this.RowSeleted = [];
           this.IdSeleted = [];
@@ -393,12 +390,17 @@ export default {
     //查询删除
     testinput() {
       console.log("输入" + this.searchText);
-      if(this.searchText===''||this.searchText==null){
-            return ;} 
-      this.WordTable=this.WordTable.filter((item,index)=>item.word==this.searchText);            
+      if (this.searchText === "" || this.searchText == null) {
+        return;
+      }
+      this.WordTable = this.WordTable.filter(
+        (item, index) => item.word == this.searchText
+      );
     },
-    reset(){ this.getWordInfo()},
-    
+    reset() {
+      this.getWordInfo();
+    },
+
     input(a) {
       this.searchText = a;
     },
@@ -418,7 +420,7 @@ export default {
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]));
     },
-    // 导入
+    //导入
     initUpload() {
       this.file = null;
       this.showProgress = false;
@@ -435,7 +437,6 @@ export default {
       this.initUpload();
       this.$Message.info("上传的文件已删除！");
     },
-    //判断文件类型
     handleBeforeUpload(file) {
       const fileExt = file.name
         .split(".")
@@ -455,7 +456,6 @@ export default {
       }
       return false;
     },
-    // 读取文件
     readFile(file) {
       const reader = new FileReader();
       reader.readAsArrayBuffer(file);
@@ -480,12 +480,15 @@ export default {
         this.tableLoading = false;
         this.showRemoveFile = true;
         // this.WordTable = [...this.WordTable, ...results];
-        this.import(results);
+        let res = results.map(item => item.word);
+        let importWord= res.join(',')
+        this.import(importWord);
         this.VisibleAddWords = false;
       };
-    },   
-    import(words){
-      this.axios.post('/ccc',words)
+    },
+    import(words) {
+      this.axios
+        .post("/vocabulary/addword?id=" + this.vocabularyid + "&words=" + words)
         .then(data => {
           this.getWordInfo();
         })
