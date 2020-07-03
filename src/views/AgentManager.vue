@@ -47,7 +47,9 @@
           <el-row>
             <el-col :span="12">
               <el-row style="float:left">
-                <nobr v-if="selectExistAgent()">Agent ID:{{currentAgentId}}，创建于{{currentAgentCreateTime}}</nobr>
+                <nobr
+                  v-if="selectExistAgent()"
+                >Agent ID:{{currentAgentId}}，创建于{{currentAgentCreateTime}}</nobr>
                 <nobr v-if="!selectExistAgent()">请选择一个agent</nobr>
               </el-row>
             </el-col>
@@ -58,7 +60,11 @@
                   @click="changeAgent = true"
                   :disabled="!selectExistAgent()"
                 >修改</el-button>
-                <el-button type="primary" :disabled="!selectExistAgent()">测试</el-button>
+                <el-button
+                  type="primary"
+                  @click="testAgent.bol = true"
+                  :disabled="!selectExistAgent()"
+                >测试</el-button>
                 <el-button
                   type="primary"
                   @click="deleteAgent = true"
@@ -241,6 +247,14 @@
               <el-button type="primary" @click="onDeleteAgent">确 定</el-button>
             </span>
           </el-dialog>
+
+          <!-- 8. 测试 -->
+          <agent-test-dialog
+            :visible="testAgent"
+            :current-agent-id="currentAgentId"
+            :current-agent-name="currentInfo.name"
+            @onClose="handleClose"
+          ></agent-test-dialog>
         </div>
       </el-main>
     </el-container>
@@ -248,12 +262,16 @@
 </template>
 
 <script>
+import AgentTestDialog from "./AgentTestDialog";
 export default {
+  components:{
+    AgentTestDialog
+  },
   data() {
     return {
       searchAgentName: "", //需要搜索的agent名字
       agentList: [], //所有可选的agent
-      currentAgentId: "", //当前agent的id
+      currentAgentId: -1, //当前agent的id
       currentAgentModels: [], //当前agent挂载的所有模型 [{modelId,modelType,modeData}]
       currentAgentCreateTime: "",
       currentInfo: {
@@ -278,6 +296,7 @@ export default {
 
       //以下是ui控制域
       deleteAgent: false,
+      testAgent: { bol: false },
 
       newAgent: false,
       newAgentMountQA: false,
@@ -298,7 +317,7 @@ export default {
   },
   methods: {
     selectExistAgent() {
-      return this.currentAgentId && !this.currentAgentId.isEmpty();
+      return this.currentAgentId != -1;
     },
     /*
      * 搜索 agent
@@ -372,15 +391,15 @@ export default {
     },
     /*
      * 保存model信息,并写入changeAgent以供修改
-     * data: models of agent
+     * data: models of agent [{modelId, modeData, modeType}]
      */
     handleAgent(data) {
       function mapModelType2Name(modelType) {
         let m = {
           "0": "QA",
-          "1": "多轮对话",
-          "2": "知识图谱",
-          "3": "知识库"
+          "1": "知识图谱",
+          "2": "多轮对话",
+          "3": "词表"
         };
         return m[modelType];
       }
@@ -391,12 +410,12 @@ export default {
             this.currentInfo.qaid.push(model);
             break;
           case 1:
-            //多轮对话
-            this.currentInfo.sceneid.push(model);
-            break;
-          case 2:
             //知识图谱
             this.currentInfo.kgid.push(model);
+            break;
+          case 2:
+            //多轮对话
+            this.currentInfo.sceneid.push(model);
             break;
           case 3:
             //词表

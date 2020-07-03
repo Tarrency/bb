@@ -119,10 +119,6 @@ export default {
                       {
                             index: 'agent',
                             title: 'Agent状态'
-                      },{
-                            index: 'agenttest',
-                            title: '测试'
-
                       }
                     ]
                 },

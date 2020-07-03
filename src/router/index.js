@@ -5,7 +5,6 @@ import KgManager from '../views/KgManager'
 import KgEdit from '../views/KgEdit.vue'
 import Vocabulary from '../views/Vocabulary.vue'
 import AgentManager from '../views/AgentManager.vue'
-import AgentTestManager from '../views/AgentTestManager.vue'
 import DialogueStatistics from '../views/DialogueStatistics.vue'
 import OperationLog from '../views/OperationLog.vue'
 import AccountManage from "../views/AccountManage"
@@ -24,7 +23,8 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 import hello from '../views/hello'
-const routes = [{
+const routes = [
+    {
         path: '/',
         redirect: '/dashboard'
     }, {
@@ -34,13 +34,11 @@ const routes = [{
         path: '/dashboard',
         name: 'dashboard',
         component: DashBoard
-    },
-    {
+    }, {
         path: '/logs',
         name: 'logs',
         component: OperationLog
-    },
-    {
+    }, {
         path: '/userinfo',
         name: 'userinfo',
         component: AccountManage
@@ -52,10 +50,6 @@ const routes = [{
         path: '/agent',
         name: 'AgentManager',
         component: AgentManager
-    }, {
-        path: '/agenttest',
-        name: 'AgentTestManager',
-        component: AgentTestManager
     }, {
         path: '/vocabulary',
         name: 'Vocabulary',
@@ -80,13 +74,11 @@ const routes = [{
         path: '/KgEdit',
         name: 'KgEdit',
         component: KgEdit
-    }, 
-    {
+    }, {
         path: '/CrawlerList',
         name: 'CrawlerList',
         component: CrawlerList
-    }, 
-    {
+    }, {
         path: '/CrawlerNew',
         name: 'CrawlerNew',
         component: CrawlerNew
