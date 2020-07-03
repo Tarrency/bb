@@ -46,7 +46,7 @@ export default {
     },
     modelIds: {
       //当前挂载到agent的所有模型的id
-      type: Array,
+      type: Array,//[String]
       required: true
     },
 
@@ -55,11 +55,6 @@ export default {
       type: Object,
       default: { bol: false }
     }
-  },
-  watch: {
-    visible() {
-      console.log('watch visible', this.visible)
-    },
   },
   data() {
     return {
@@ -73,7 +68,6 @@ export default {
       },
     };
   },
-  created() {},
   methods: {
     /*
      * 发送
@@ -84,8 +78,8 @@ export default {
       this.axios
         .post("/aiie/predict", null, {
           params: {
-            modelIds: [],
-            modelType: 0,
+            modelIds: this.modelIds,
+            modelType: this.modelType,
             userText: text
           }
         })
