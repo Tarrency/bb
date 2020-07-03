@@ -62,7 +62,7 @@
                 >修改</el-button>
                 <el-button
                   type="primary"
-                  @click="testAgent.bol = true"
+                  @click="testAgent.visible = true"
                   :disabled="!selectExistAgent()"
                 >测试</el-button>
                 <el-button
@@ -81,7 +81,7 @@
                 <el-input v-model="newInfo.name" style="width:50%"></el-input>
               </el-form-item>
               <el-form-item label="模型类型:">
-                <el-select placeholder v-model="currentInfo.modeType" @change="onNewModelType">
+                <el-select placeholder v-model="newInfo.modelType" @change="onNewModelType">
                   <el-option
                     v-for="item in modelType2Label"
                     :key="item.type"
@@ -93,7 +93,7 @@
               <el-form-item label="模型:">
                 <el-button
                   type="primary"
-                  @click="newAgentMount = true"
+                  @click="newAgentMount.visible = true"
                   :disabled="newAgentMountDisable"
                 >+ 请添加挂载</el-button>
               </el-form-item>
@@ -103,20 +103,11 @@
               <el-button type="primary" @click="onAddAgent">确 定</el-button>
             </div>
           </el-dialog>
-          <el-dialog title="挂接模型" :visible.sync="changeAgentMount" class="dialog-body">
-            <el-checkbox-group v-model="currentInfo.modelIds">
-              <el-checkbox
-                v-for="item in sceneList"
-                :key="item.id"
-                :label="item.id"
-                :value="item.name"
-              >{{item.name}}</el-checkbox>
-            </el-checkbox-group>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="newAgentMount = false">取 消</el-button>
-              <el-button type="primary" @click="newAgentMount = false">确 定</el-button>
-            </div>
-          </el-dialog>
+          <agent-mount-dialog
+            :controller="newAgentMount"
+            :model-type="newInfo.modelType"
+            :model-ids="newInfo.modelIds"
+          ></agent-mount-dialog>
 
           <!-- 6. 修改agent的dialog -->
           <el-dialog title="修改Agent" :visible.sync="changeAgent" class="dialog-body">
@@ -128,7 +119,7 @@
                 <el-input v-model="currentInfo.name" style="width:50%">{{currentInfo.name}}</el-input>
               </el-form-item>
               <el-form-item label="模型类型:">
-                <el-select placeholder v-model="currentInfo.modeType" @change="onChangeModelType">
+                <el-select placeholder v-model="currentInfo.modelType" @change="onChangeModelType">
                   <el-option
                     v-for="item in modelType2Label"
                     :key="item.type"
@@ -140,7 +131,7 @@
               <el-form-item label="模型:">
                 <el-button
                   type="primary"
-                  @click="changeAgentMount = true"
+                  @click="changeAgentMount.visible = true"
                   :disabled="changeAgentMountDisable"
                 >+ 请添加挂载</el-button>
               </el-form-item>
@@ -150,20 +141,11 @@
               <el-button type="primary" @click="onChangeAgent">确 定</el-button>
             </div>
           </el-dialog>
-          <el-dialog title="挂接模型" :visible.sync="changeAgentMount" class="dialog-body">
-            <el-checkbox-group v-model="currentInfo.modelIds">
-              <el-checkbox
-                v-for="item in sceneList"
-                :key="item.id"
-                :label="item.id"
-                :value="item.name"
-              >{{item.name}}</el-checkbox>
-            </el-checkbox-group>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="changeAgentMount = false">取 消</el-button>
-              <el-button type="primary" @click="changeAgentMount = false">确 定</el-button>
-            </div>
-          </el-dialog>
+          <agent-mount-dialog
+            :controller="changeAgentMount"
+            :model-type="currentInfo.modelType"
+            :model-ids="currentInfo.modelIds"
+          ></agent-mount-dialog>
 
           <!-- 7. 删除agent -->
           <el-dialog :visible.sync="deleteAgent" :before-close="handleClose">
@@ -176,7 +158,7 @@
 
           <!-- 8. 测试 -->
           <agent-test-dialog
-            :visible="testAgent"
+            :controller="testAgent"
             :current-agent-id="currentInfo.id"
             :current-agent-name="currentInfo.name"
             :model-type="currentInfo.modelType"
@@ -191,9 +173,11 @@
 
 <script>
 import AgentTestDialog from "./AgentTestDialog";
+import AgentMountDialog from "./AgentMountDialog";
 export default {
   components: {
-    AgentTestDialog
+    AgentTestDialog,
+    AgentMountDialog
   },
   data() {
     return {
@@ -213,10 +197,6 @@ export default {
         modelType: -1,
         modelIds: [] //[String] 模型的id是string
       },
-      QAList: [{ id: "1", name: "hhh" }], //QA
-      sceneList: [{ id: "1", name: "hhh" }], //多轮对话
-      KGList: [{ id: "1", name: "hhh" }], //知识图谱
-      vocabularyList: [{ id: "1", name: "hhh" }], //词表
 
       //以下是静态数据，不要修改
       modelType2Label: [
@@ -228,14 +208,18 @@ export default {
 
       //以下是ui控制域
       deleteAgent: false,
-      testAgent: { bol: false },
+      testAgent: { visible: false },
 
       newAgent: false,
-      newAgentMount: false,
+      newAgentMount: {
+        visible: false
+      },
       newAgentMountDisable: true,
 
       changeAgent: false,
-      changeAgentMount: false,
+      changeAgentMount: {
+        visible: true //修改agent时，一定已经有合法的modelType了，可以直接显示
+      },
       changeAgentMountDisable: true
     };
   },
@@ -427,18 +411,20 @@ export default {
      * 选中模型类型时，根据模型类型读取该类型的所有模型，以供选择
      */
     onChangeModelType(e) {
-      //TODO
-      const validModelType = this.validModelType(this.currentInfo.modelType);
-      this.changeAgentMountDisable = validModelType;
+      const type = this.currentInfo.modelType;
+      const validModelType = this.validModelType(type);
+      this.changeAgentMountDisable = !validModelType;
+      console.log(type, this.changeAgentMount);
     },
     /*
      * 新建模型
      * 选中模型类型时，根据模型类型读取该类型的所有模型，以供选择
      */
     onNewModelType(e) {
-      //TODO
-      const validModelType = this.validModelType(this.newInfo.modelType);
-      this.newAgentMountDisable = validModelType;
+      const type = this.newInfo.modelType;
+      const validModelType = this.validModelType(type);
+      this.newAgentMountDisable = !validModelType;
+      console.log(type, this.newAgentMount);
     },
     handleClose(done) {
       this.$confirm("确认关闭？")

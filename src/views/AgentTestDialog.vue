@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="visible.bol" :before-close="onClose">
+  <el-dialog :visible.sync="controller.visible" :before-close="onClose">
     <!-- 主要内容区 -->
     <!-- 1.agent title -->
     <el-row type="flex" justify="center">
@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: 'AgentTestDialog',
+  name: "AgentTestDialog",
   props: {
     currentAgentId: {
       //当前agent的id
@@ -46,14 +46,16 @@ export default {
     },
     modelIds: {
       //当前挂载到agent的所有模型的id
-      type: Array,//[String]
+      type: Array, //[String]
       required: true
     },
 
     //ui控制
-    visible: {
+    controller: {
       type: Object,
-      default: { bol: false }
+      default: {
+        visible: false
+      }
     }
   },
   data() {
@@ -65,7 +67,7 @@ export default {
         show: ["history"],
         callback: this.toolEvent,
         showEmoji: false
-      },
+      }
     };
   },
   methods: {
@@ -144,7 +146,7 @@ export default {
     onClose(done) {
       //触发 onClose 事件
       //传递 el-dialog 的beforeClose的参数 done 给外界
-      this.$emit('onClose', done)
+      this.$emit("onClose", done);
     }
   }
 };

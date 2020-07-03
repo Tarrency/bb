@@ -46,7 +46,7 @@ export default {
   height:50px;
   border-bottom:2px solid silver;
   background-color:#fff;
-  text-align:right;  
+  text-align:right;
 }
 .el-main {
   background-color:#fff;
