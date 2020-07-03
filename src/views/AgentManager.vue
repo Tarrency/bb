@@ -80,17 +80,22 @@
               <el-form-item label="名称:" placeholder="请输入agent名称">
                 <el-input v-model="newInfo.name" style="width:50%"></el-input>
               </el-form-item>
-              <el-form-item label="QA知识库:">
-                <el-button type="primary" @click="newAgentMountQA = true">+ 请添加挂载</el-button>
+              <el-form-item label="模型类型:">
+                <el-select placeholder v-model="currentInfo.modeType" @change="onNewModelType">
+                  <el-option
+                    v-for="item in modelType2Label"
+                    :key="item.type"
+                    :label="item.label"
+                    :value="item.type"
+                  ></el-option>
+                </el-select>
               </el-form-item>
-              <el-form-item label="多轮对话场景:">
-                <el-button type="primary" @click="newAgentMountScene = true">+ 请添加挂载</el-button>
-              </el-form-item>
-              <el-form-item label="知识图谱:">
-                <el-button type="primary" @click="newAgentMountKG = true">+ 请添加挂载</el-button>
-              </el-form-item>
-              <el-form-item label="词表:">
-                <el-button type="primary" @click="newAgentMountWD = true">+ 请添加挂载</el-button>
+              <el-form-item label="模型:">
+                <el-button
+                  type="primary"
+                  @click="newAgentMount = true"
+                  :disabled="newAgentMountDisable"
+                >+ 请添加挂载</el-button>
               </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -98,8 +103,8 @@
               <el-button type="primary" @click="onAddAgent">确 定</el-button>
             </div>
           </el-dialog>
-          <el-dialog title="挂接对论对话" :visible.sync="newAgentMountScene" class="dialog-body">
-            <el-checkbox-group v-model="newInfo.modelIds">
+          <el-dialog title="挂接模型" :visible.sync="changeAgentMount" class="dialog-body">
+            <el-checkbox-group v-model="currentInfo.modelIds">
               <el-checkbox
                 v-for="item in sceneList"
                 :key="item.id"
@@ -108,50 +113,8 @@
               >{{item.name}}</el-checkbox>
             </el-checkbox-group>
             <div slot="footer" class="dialog-footer">
-              <el-button @click="newAgentMountScene = false">取 消</el-button>
-              <el-button type="primary" @click="newAgentMountScene = false">确 定</el-button>
-            </div>
-          </el-dialog>
-          <el-dialog title="挂接QA知识库" :visible.sync="newAgentMountQA" class="dialog-body">
-            <el-checkbox-group v-model="newInfo.modelIds">
-              <el-checkbox
-                v-for="item in QAList"
-                :key="item.id"
-                :label="item.id"
-                :value="item.name"
-              >{{item.name}}</el-checkbox>
-            </el-checkbox-group>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="newAgentMountQA = false">取 消</el-button>
-              <el-button type="primary" @click="newAgentMountQA = false">确 定</el-button>
-            </div>
-          </el-dialog>
-          <el-dialog title="挂接知识图谱" :visible.sync="newAgentMountKG" class="dialog-body">
-            <el-checkbox-group v-model="newInfo.modelIds">
-              <el-checkbox
-                v-for="item in KGList"
-                :key="item.id"
-                :label="item.id"
-                :value="item.name"
-              >{{item.name}}</el-checkbox>
-            </el-checkbox-group>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="newAgentMountKG = false">取 消</el-button>
-              <el-button type="primary" @click="newAgentMountKG = false">确 定</el-button>
-            </div>
-          </el-dialog>
-          <el-dialog title="挂接词表" :visible.sync="newAgentMountWD" class="dialog-body">
-            <el-checkbox-group v-model="newInfo.modelIds">
-              <el-checkbox
-                v-for="item in vocabularyList"
-                :key="item.id"
-                :label="item.id"
-                :value="item.name"
-              >{{item.name}}</el-checkbox>
-            </el-checkbox-group>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="newAgentMountWD = false">取 消</el-button>
-              <el-button type="primary" @click="newAgentMountWD = false">确 定</el-button>
+              <el-button @click="newAgentMount = false">取 消</el-button>
+              <el-button type="primary" @click="newAgentMount = false">确 定</el-button>
             </div>
           </el-dialog>
 
@@ -165,7 +128,7 @@
                 <el-input v-model="currentInfo.name" style="width:50%">{{currentInfo.name}}</el-input>
               </el-form-item>
               <el-form-item label="模型类型:">
-                <el-select placeholder v-model="currentInfo.modeType" @select="onSelectModelType">
+                <el-select placeholder v-model="currentInfo.modeType" @change="onChangeModelType">
                   <el-option
                     v-for="item in modelType2Label"
                     :key="item.type"
@@ -175,7 +138,11 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="模型:">
-                <el-button type="primary" @click="changeAgentMountScene = true">+ 请添加挂载</el-button>
+                <el-button
+                  type="primary"
+                  @click="changeAgentMount = true"
+                  :disabled="changeAgentMountDisable"
+                >+ 请添加挂载</el-button>
               </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -183,7 +150,7 @@
               <el-button type="primary" @click="onChangeAgent">确 定</el-button>
             </div>
           </el-dialog>
-          <el-dialog title="挂接对论对话" :visible.sync="changeAgentMountScene" class="dialog-body">
+          <el-dialog title="挂接模型" :visible.sync="changeAgentMount" class="dialog-body">
             <el-checkbox-group v-model="currentInfo.modelIds">
               <el-checkbox
                 v-for="item in sceneList"
@@ -193,50 +160,8 @@
               >{{item.name}}</el-checkbox>
             </el-checkbox-group>
             <div slot="footer" class="dialog-footer">
-              <el-button @click="changeAgentMountScene = false">取 消</el-button>
-              <el-button type="primary" @click="changeAgentMountScene = false">确 定</el-button>
-            </div>
-          </el-dialog>
-          <el-dialog title="挂接QA知识库" :visible.sync="changeAgentMountQA" class="dialog-body">
-            <el-checkbox-group v-model="currentInfo.modelIds">
-              <el-checkbox
-                v-for="item in QAList"
-                :key="item.id"
-                :label="item.id"
-                :value="item.name"
-              >{{item.name}}</el-checkbox>
-            </el-checkbox-group>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="changeAgentMountQA = false">取 消</el-button>
-              <el-button type="primary" @click="changeAgentMountQA = false">确 定</el-button>
-            </div>
-          </el-dialog>
-          <el-dialog title="挂接知识图谱" :visible.sync="changeAgentMountKG" class="dialog-body">
-            <el-checkbox-group v-model="currentInfo.modelIds">
-              <el-checkbox
-                v-for="item in KGList"
-                :key="item.id"
-                :label="item.id"
-                :value="item.name"
-              >{{item.name}}</el-checkbox>
-            </el-checkbox-group>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="changeAgentMountKG = false">取 消</el-button>
-              <el-button type="primary" @click="changeAgentMountKG = false">确 定</el-button>
-            </div>
-          </el-dialog>
-          <el-dialog title="挂接词表" :visible.sync="changeAgentMountWD" class="dialog-body">
-            <el-checkbox-group v-model="currentInfo.modelIds">
-              <el-checkbox
-                v-for="item in vocabularyList"
-                :key="item.id"
-                :label="item.id"
-                :value="item.name"
-              >{{item.name}}</el-checkbox>
-            </el-checkbox-group>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="changeAgentMountWD = false">取 消</el-button>
-              <el-button type="primary" @click="changeAgentMountWD = false">确 定</el-button>
+              <el-button @click="changeAgentMount = false">取 消</el-button>
+              <el-button type="primary" @click="changeAgentMount = false">确 定</el-button>
             </div>
           </el-dialog>
 
@@ -288,10 +213,10 @@ export default {
         modelType: -1,
         modelIds: [] //[String] 模型的id是string
       },
-      QAList: [{ id: 1, name: "hhh" }], //QA
-      sceneList: [{ id: 1, name: "hhh" }], //多轮对话
-      KGList: [{ id: 1, name: "hhh" }], //知识图谱
-      vocabularyList: [{ id: 1, name: "hhh" }], //词表
+      QAList: [{ id: "1", name: "hhh" }], //QA
+      sceneList: [{ id: "1", name: "hhh" }], //多轮对话
+      KGList: [{ id: "1", name: "hhh" }], //知识图谱
+      vocabularyList: [{ id: "1", name: "hhh" }], //词表
 
       //以下是静态数据，不要修改
       modelType2Label: [
@@ -306,16 +231,12 @@ export default {
       testAgent: { bol: false },
 
       newAgent: false,
-      newAgentMountQA: false,
-      newAgentMountKG: false,
-      newAgentMountWD: false,
-      newAgentMountScene: false,
+      newAgentMount: false,
+      newAgentMountDisable: true,
 
       changeAgent: false,
-      changeAgentMountQA: false,
-      changeAgentMountKG: false,
-      changeAgentMountWD: false,
-      changeAgentMountScene: false
+      changeAgentMount: false,
+      changeAgentMountDisable: true
     };
   },
   computed: {},
@@ -498,11 +419,26 @@ export default {
           console.log(err);
         });
     },
+    validModelType(modelType) {
+      return modelType >= 0 && modelType <= 3;
+    },
     /*
+     * 修改模型
      * 选中模型类型时，根据模型类型读取该类型的所有模型，以供选择
      */
-    onSelectModelType(e) {
+    onChangeModelType(e) {
       //TODO
+      const validModelType = this.validModelType(this.currentInfo.modelType);
+      this.changeAgentMountDisable = validModelType;
+    },
+    /*
+     * 新建模型
+     * 选中模型类型时，根据模型类型读取该类型的所有模型，以供选择
+     */
+    onNewModelType(e) {
+      //TODO
+      const validModelType = this.validModelType(this.newInfo.modelType);
+      this.newAgentMountDisable = validModelType;
     },
     handleClose(done) {
       this.$confirm("确认关闭？")
