@@ -12,7 +12,7 @@
         <div>
           <el-row>
             <el-col :span="9">
-              <el-input size="small" placeholder="请输入内容" v-model="input1">
+              <el-input size="small" placeholder="请输入内容" v-model.trim="inputKey">
                 <template slot="prepend">按节点查询</template>
               </el-input>
             </el-col>
@@ -107,7 +107,9 @@ export default {
       NodeType: [],
       relatives: [],
       VisibleType: false,
-      VisibleRelation: false
+      VisibleRelation: false,
+      inputKey:"",//搜索关键词
+      value:[""],//选择数据库
     };
   },
   mounted() {
@@ -193,7 +195,9 @@ export default {
           }
         ]
       });
-    }
+    },
+    testinput(){},
+    reset(){},
   }
 };
 // var myChart = echarts.init(document.getElementById("kg_show"));

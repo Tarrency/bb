@@ -113,7 +113,7 @@ export default {
     //获取词表名称id
     getVcabularyInfo() {
       this.axios
-        .get("/vocabulary/getlist", {
+        .get("/aaa", {
           params: {
             type: 0
           }
@@ -127,7 +127,7 @@ export default {
     //获取词语列表
     getWordInfo() {
       this.axios
-        .get("/vocabulary/search", {
+        .get("/bbb", {
           params: {
             id: this.vocabularyid,
             key: this.searchText
@@ -145,9 +145,8 @@ export default {
     newVocaburaly() {
       this.axios
         .post(
-          "/vocabulary/addnew?name=" + this.vcbform.name + "&type=0"
+          "/vocabulary/addnew?name=" + this.vcbform.name 
           //name: this.vcbform.name,
-          //type : 0 // 0:专用词，1：敏感词
         )
         .then(this.getVcabularyInfo, (this.VisibleNewDialog = false))
         .catch(err => {
@@ -170,7 +169,7 @@ export default {
     //删除词表
     delVocaburaly() {
       this.axios
-        .delete("/vocabulary/delete?id=" + this.vocabularyid)
+        .delete("/ccc" + this.vocabularyid)
         .then(this.getVcabularyInfo, (this.VisibleDelDialog = false))
         .catch(err => {
           console.log("请求失败:" + err.status + "," + err.statusText);
@@ -183,7 +182,7 @@ export default {
     addWord() {
       this.axios
         .post(
-          "/vocabulary/addword?id=" +
+          "/ddd" +
             this.vocabularyid +
             "&words=" +
             this.inputNewWords
@@ -232,7 +231,7 @@ export default {
     deleteWords() {
       this.axios
         .delete(
-          "./vocabulary/deleteWords?wordIDs=" + this.IdSeleted.join(",")
+          "/eee" + this.IdSeleted.join(",")
         )
         .then(data => {
           this.RowSeleted = [];
