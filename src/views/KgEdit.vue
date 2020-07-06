@@ -33,7 +33,9 @@
             </el-col>
           </el-row>
           <el-row>
-            <div class="kg" id="kg_show"></div>
+            <el-col :span="24">
+              <div class="kg" id="kg_show">这是一个图</div>
+            </el-col>
           </el-row>
           <!-- 单词表格 -->
           <el-row>
@@ -113,7 +115,7 @@ export default {
     };
   },
   mounted() {
-    this.drawKg();
+    this.drawkg();
   },
   methods: {
     detail() {
@@ -122,7 +124,7 @@ export default {
     },
     drawkg() {
       this.axios
-        .get("/aaa", res)
+        .get("/aaa", )
         .then(res => {
           this.draw(res);
         })
@@ -196,8 +198,22 @@ export default {
         ]
       });
     },
+    //查询
     testinput(){},
+    //取消重置
     reset(){},
+    handleSelectionChange(val) {
+      //val 为选中数据的集合
+      this.RowSeleted = val;
+    },
+    //节点类型清空
+    clear(){},
+    //节点类型新建
+    rebuild(){},
+    //关联节点修改
+    modify(){},
+    //关联节点清除
+    remove(){},
   }
 };
 // var myChart = echarts.init(document.getElementById("kg_show"));

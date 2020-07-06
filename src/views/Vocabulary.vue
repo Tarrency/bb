@@ -232,7 +232,7 @@ export default {
         .then(resp => {
           this.vocabulary = resp.data.data;
         })
-        .catch(err => {});
+        .catch(err => {console.log("请求失败:" + err.status + "," + err.statusText);});
     },
     //获取词语列表
     getWordInfo() {
