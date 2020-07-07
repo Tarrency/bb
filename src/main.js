@@ -10,7 +10,6 @@ import Chat from 'jwchat';
 import echarts from 'echarts';
 
 Vue.prototype.$echarts = echarts;
-require('./assets/mock.js');
 
 
 Vue.use(Chat) // 测试界面的聊天窗口

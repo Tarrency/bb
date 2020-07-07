@@ -9,6 +9,7 @@
         </el-breadcrumb>
       </el-header>
       <el-main style="line-height:80px">
+        <!-- <el-main> -->
         <div>
           <el-row>
             <el-col :span="9">
@@ -34,20 +35,29 @@
           </el-row>
           <el-row>
             <el-col :span="24">
-              <div class="kg" id="kg_show">这是一个图</div>
+              <div id="test" :style="{width: '300px', height: '300px'}"></div>
+              <div class="kg" id="kg_show" :style="{width: '300px', height: '300px'}">这是一个图</div>
             </el-col>
           </el-row>
           <!-- 单词表格 -->
           <el-row>
-            <el-row  style="line-height:20px;">
+            <el-row style="line-height:20px;">
               <el-col :span="4" :offset="11">节点列表</el-col>
             </el-row>
             <el-row>
-              <el-table :data="NodeList" @selection-change="handleSelectionChange" >
+              <el-table :data="NodeList" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" label="全选"></el-table-column>
                 <el-table-column prop="id" label="id"></el-table-column>
-                <el-table-column prop="type" label="类型"></el-table-column>
-                <el-table-column prop="name" label="名称"></el-table-column>
+                <el-table-column prop="type" label="类型">
+                  <template slot-scope="scope">
+                    <span v-if="!scope.row.edit">{{scope.row.type}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="name" label="名称">
+                  <template slot-scope="scope">
+                    <span v-if="!scope.row.edit">{{scope.row.name}}</span>
+                  </template>
+                </el-table-column>
               </el-table>
             </el-row>
             <el-row :span="8" style="float:right;text-align:right">
@@ -56,19 +66,27 @@
           </el-row>
           <el-row>
             <div v-show="VisibleType">
-              <el-row  style="line-height:20px">
+              <el-row style="line-height:20px">
                 <el-col :span="4" :offset="11">节点类型</el-col>
               </el-row>
               <el-row>
-                <el-table :data="NodeType" >
-                  <el-table-column prop="property" label="属性"></el-table-column>
-                  <el-table-column prop="content" label="内容"></el-table-column>
+                <el-table :data="NodeType">
+                  <el-table-column prop="property" label="属性">
+                    <template slot-scope="scope">
+                      <span v-if="!scope.row.edit">{{scope.row.property}}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="content" label="内容">
+                    <template slot-scope="scope">
+                      <span v-if="!scope.row.edit">{{scope.row.content}}</span>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </el-row>
               <el-row>
                 <el-col :span="8" style="float:right;text-align:right">
-                  <el-button type="primary"  size="small" @click="clear">清空</el-button>
-                  <el-button type="primary"  size="small" @click="rebuild">新建</el-button>
+                  <el-button type="primary" size="small" @click="clear">清空</el-button>
+                  <el-button type="primary" size="small" @click="rebuild">新建</el-button>
                 </el-col>
               </el-row>
             </div>
@@ -79,10 +97,18 @@
                 <el-col :span="4" :offset="11">关联节点</el-col>
               </el-row>
               <el-row>
-                <el-table :data="relatives" >
-                  <el-table-column prop="relation" label="关系"></el-table-column>
-                  <el-table-column prop="id" label="id"></el-table-column>
-                  <el-table-column prop="name" label="名称"></el-table-column>
+                <el-table :data="relatives">
+                  <el-table-column prop="relation" label="关系">
+                    <template slot-scope="scope">
+                      <span v-if="!scope.row.edit">{{scope.row.relation}}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="ids" label="id"></el-table-column>
+                  <el-table-column prop="names" label="名称">
+                    <template slot-scope="scope">
+                      <span v-if="!scope.row.edit">{{scope.row.names}}</span>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </el-row>
               <el-row>
@@ -110,21 +136,63 @@ export default {
       relatives: [],
       VisibleType: false,
       VisibleRelation: false,
-      inputKey:"",//搜索关键词
-      value:[""],//选择数据库
+      inputKey: "", //搜索关键词
+      value: [""] //选择数据库
     };
   },
   mounted() {
     this.drawkg();
+    this.drawTest();
   },
   methods: {
     detail() {
       this.VisibleType = true;
       this.VisibleRelation = true;
     },
+    drawTest() {
+      let test = this.$echarts.init(document.getElementById("test"));
+      test.setOption({
+        title: {
+          text: "某站点用户访问来源",
+          subtext: "纯属虚构",
+          left: "center"
+        },
+        tooltip: {
+          trigger: "item",
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+          orient: "vertical",
+          left: "left",
+          data: ["直接访问", "邮件营销", "联盟广告", "视频广告", "搜索引擎"]
+        },
+        series: [
+          {
+            name: "访问来源",
+            type: "pie",
+            radius: "55%",
+            center: ["50%", "60%"],
+            data: [
+              { value: 335, name: "直接访问" },
+              { value: 310, name: "邮件营销" },
+              { value: 234, name: "联盟广告" },
+              { value: 135, name: "视频广告" },
+              { value: 1548, name: "搜索引擎" }
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: "rgba(0, 0, 0, 0.5)"
+              }
+            }
+          }
+        ]
+      });
+    },
     drawkg() {
       this.axios
-        .get("/aaa", )
+        .get("/aaa")
         .then(res => {
           this.draw(res);
         })
@@ -199,21 +267,21 @@ export default {
       });
     },
     //查询
-    testinput(){},
+    testinput() {},
     //取消重置
-    reset(){},
+    reset() {},
     handleSelectionChange(val) {
       //val 为选中数据的集合
       this.RowSeleted = val;
     },
     //节点类型清空
-    clear(){},
+    clear() {},
     //节点类型新建
-    rebuild(){},
+    rebuild() {},
     //关联节点修改
-    modify(){},
+    modify() {},
     //关联节点清除
-    remove(){},
+    remove() {}
   }
 };
 // var myChart = echarts.init(document.getElementById("kg_show"));
