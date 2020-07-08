@@ -388,14 +388,19 @@ export default {
       }
     },
     //查询删除
-    testinput() {
-      console.log("输入" + this.searchText);
-      if (this.searchText === "" || this.searchText == null) {
-        return;
-      }
-      this.WordTable = this.WordTable.filter(
-        (item, index) => item.word == this.searchText
-      );
+    // testinput() {
+    //   console.log("输入" + this.searchText);
+    //   if (this.searchText === "" || this.searchText == null) {
+    //     return;
+    //   }
+    //   this.WordTable = this.WordTable.filter(
+    //     (item, index) => item.word == this.searchText
+    //   );
+    // },
+    //查询删除
+    testinput(){
+      console.log("输入" + this.statusText)
+      this.getWordInfo();
     },
     reset() {
       this.getWordInfo();

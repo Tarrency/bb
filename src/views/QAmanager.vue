@@ -18,9 +18,9 @@
               <el-radio-group v-model="QAlibraryid" @change="getQAInfo">
                 <el-radio-button
                   v-for="value in QAlibrary"
-                  :key="value.id"
-                  :label="value.id"
-                >{{value.name}}</el-radio-button>
+                  :key="value.kBID"
+                  :label="value.kBID"
+                >{{value.kBName}}</el-radio-button>
               </el-radio-group>
             </el-col>
             <el-col :span="8" style="float:right;text-align:right">
@@ -43,7 +43,7 @@
             </el-col>
             <el-col :span="5">
               <el-button type="primary" size="small" @click="testinput">查询</el-button>
-              <el-button size="small">删除</el-button>
+              <el-button size="small" @click="reset">删除</el-button>
             </el-col>
           </el-row>
           <el-row>
@@ -71,9 +71,9 @@
               </el-table-column>
               <el-table-column prop="action" label="操作">
                 <template slot-scope="scope">
-                  <!-- <el-button size="mini" @click="modifyWordBtn(scope.$index, scope.row)">编辑</el-button> -->
-                  <el-button size="mini" @click="modifyBtn()">编辑</el-button>
-                  <el-button size="mini" type="danger" @click="deleteQABtn(scope.row)">删除</el-button>
+                  <el-button size="mini" @click="modifyBtn(scope.$index, scope.row)">编辑</el-button>
+                  <!-- <el-button size="mini" @click="">编辑</el-button> -->
+                  <el-button size="mini" type="danger" @click="deleteQABtn(scope.$index, scope.row)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -109,10 +109,10 @@
           </el-form>
         </el-dialog>
         <!-- 编辑按钮 -->
-        <el-dialog title="修改问答" :visible.sync="VisibleAddQA" class="dialog">
+        <el-dialog title="修改问答" :visible.sync="VisibleModify" class="dialog">
           <el-form :model="QAmodify">
             <el-form-item label="所属问答库：">
-              <nobr v-for="v in QAlibrary" v-show="v.id == QAlibraryid" :key="v.id">{{v.name}}</nobr>
+              <nobr v-for="v in QAlibrary" v-show="v.kBID == QAlibraryid" :key="v.kBID">{{v.kBName}}</nobr>
             </el-form-item>
             <!-- <el-form-item label="修改问题:" :prop="newQuestion"> -->
             <el-form-item label="修改问题:">
@@ -147,9 +147,9 @@
               删除不可恢复，您确定要删除问答库“
               <nobr
                 v-for="v in QAlibrary"
-                v-show="v.id == QAlibraryid"
-                :key="v.id"
-              >{{v.name}}</nobr>
+                v-show="v.kBID == QAlibraryid"
+                :key="v.kBID"
+              >{{v.kBName}}</nobr>
               ”?
             </el-form-item>
             <el-form-item>
@@ -162,9 +162,9 @@
         <el-dialog title="新增问答" :visible.sync="VisibleAddQA" class="dialog">
           <el-form :model="inputQA">
             <el-form-item label="所属问答库：">
-              <nobr v-for="v in QAlibrary" v-show="v.id == QAlibraryid" :key="v.id">{{v.name}}</nobr>
+              <nobr v-for="v in QAlibrary" v-show="v.kBID== QAlibraryid" :key="v.kBID">{{v.kBName}}</nobr>
             </el-form-item>
-            <el-form-item label="新增问题:" >
+            <el-form-item label="新增问题:">
               <!-- <el-col :span="24" v-for="(question,index) in inputQuestion" :key="index">
                 <el-input v-model="inputQuestion[index]" autocomplete="off"></el-input>
               </el-col>-->
@@ -172,12 +172,12 @@
                 <el-input v-model="inputQA.Question" autocomplete="off"></el-input>
               </el-col>
             </el-form-item>
-            <el-form-item label="新增回答:" >
+            <el-form-item label="新增回答:">
               <el-col :span="24">
                 <el-input v-model="inputQA.Answer" autocomplete="off"></el-input>
               </el-col>
             </el-form-item>
-            <el-form-item label="类型:" >
+            <el-form-item label="类型:">
               <el-col :span="24">
                 <el-input v-model="inputQA.Type" autocomplete="off"></el-input>
               </el-col>
@@ -192,7 +192,7 @@
         <el-dialog title="导入问答" :visible.sync="VisibleAddQAs" class="dialog">
           <el-form>
             <el-form-item label="所属问答库：">
-              <nobr v-for="v in QAlibrary" v-show="v.id == QAlibraryid" :key="v.id">{{v.name}}</nobr>
+              <nobr v-for="v in QAlibrary" v-show="v.kBID == QAlibraryid" :key="v.kBID">{{v.kBName}}</nobr>
             </el-form-item>
             <el-form-item>
               <el-upload action :before-upload="handleBeforeUpload" accept=".xls, .xlsx">
@@ -223,27 +223,31 @@ let moment = require("moment");
 export default {
   data() {
     return {
-      QAlibrary: [{ id: 0, name: "" }], //问答库列表
+      QAlibrary: [{ kBID: 0, kBName: "" }], //问答库列表
       QAlibraryid: 0, //选中问答库
       searchText: "", //搜素关键词
       QATable: [], //问答列表
       VisibleNewDialog: false,
       VisibleDelDialog: false,
-      VisibleAddQA: false,
+      VisibleAddQA: false, //新增
       //================
-      VisibleAddQAs: false,
+      VisibleAddQAs: false,//导入
       QAform: { name: "" }, //新增问答库
       //新增问答
-      inputQA: {
-        Question: "",
-        Answer: "",
-        Type: ""
-      },
-      QAmodify:{
-        ModQuestion: "",
-        ModAnswer: "",
-        ModType: "",
-      },
+      inputQA: [
+        {
+          Question: "",
+          Answer: "",
+          Type: ""
+        }
+      ],
+      QAmodify: [
+        {
+          ModQuestion: "",
+          ModAnswer: "",
+          ModType: ""
+        }
+      ],
       //修改编辑
       // inputQuestion: [""],
       // inputAnswer: [""],
@@ -276,26 +280,43 @@ export default {
     //获取问答库名称
     getQALibInfo() {
       this.axios
-        .get("/QAknowledge/getKnowledge", {
-          params: {}
-        })
+        .get("/QAknowledge/getKnowledge")
         .then(resp => {
           this.QAlibrary = resp.data.data;
         })
-        .catch(err => {});
+        .catch(err => {
+          console.log("请求错误：" + err.status + "," + err.statusText);
+        });
     },
-    //获取问答列表
+    //获取知识列表
     getQAInfo() {
       this.axios
         .get("/QAknowledge/getlist", {
           params: {
-            id: this.QAlibraryid,
+            queryId: this.QAlibraryid,
             queryKey: this.searchText
           }
         })
         .then(resp => {
           this.QATable = resp.data.data;
           this.QATable.edit = false;
+        })
+        .catch(err => {
+          console.log("请求失败:" + err.status + "," + err.statusText);
+        });
+    },
+    //获取查询知识列表
+    getSearchInfo() {
+      this.axios
+        .get("/vocabulary/search", {
+          params: {
+            id: this.vocabularyid,
+            key: this.searchText
+          }
+        })
+        .then(resp => {
+          this.WordTable = resp.data.data;
+          this.WordTable.edit = false;
         })
         .catch(err => {
           console.log("请求失败:" + err.status + "," + err.statusText);
@@ -356,7 +377,9 @@ export default {
       this.RowSeleted = val;
     },
     //编辑
-    modifyBtn() {
+    modifyBtn(row,index) {
+      this.RowUpdate = index
+      this.QAupdate = row
       this.VisibleModify = true;
     },
     //修改确定按钮
@@ -366,32 +389,34 @@ export default {
     //   this.$set(this.QATable, index, this.QATable[index]); //重新加载本行数据
     // },
     //修改问答确定按钮
-    modifyQA(index, row) {
-      console.log("修改问题", row.id, ":", this.QuestionModify);
+    modifyQA() {
+      console.log("修改问题", this.QAupdate.id, ":", this.QuestionModify);
       this.axios
         .post("/QAknowledge/updateKnowledge", {
-          Id: row.id,
+          // Id: row.id,
+          Id: this.QAupdate.id,
           // newData:this.QAmodify,
           // newQuestion: this.QAmodify.newQuestion,
-          newQuestion: this.ModQuestion,
-          newAnswer: this.ModAnswer,
-          newType: this.ModType
+          newQuestion: this.QAmodify.ModQuestion,
+          newAnswer: this.QAmodify.ModAnswer,
+          newType: this.QAmodify.ModType
         })
         .then(
-          (row.edit = !row.edit),
-          (row.Question = this.QAmodify.ModQuestion),
+          (this.QAupdate.edit = !this.QAupdate.edit),
+          (this.QAupdate.Question = this.QAmodify.ModQuestion),
           (this.QAmodify.ModQuestion = ""),
-          (row.Answer = this.QAmodify.ModAnswer),
+          (this.QAupdate.Answer = this.QAmodify.ModAnswer),
           (this.QAmodify.ModAnswer = ""),
-          (row.Type = this.QAmodify.ModType),
+          (this.QAupdate.Type = this.QAmodify.ModType),
           (this.QAmodify.ModType = ""),
-          this.$set(this.QATable, index, this.QATable[index]), //重新加载本行数据
+          this.$set(this.QATable, this.RowUpdate, this.QATable[this.RowUpdate]), //重新加载本行数据
           (this.VisibleModify = false)
         )
         .catch(err => {
           console.log("请求失败:" + err.status + "," + err.statusText);
         });
-      this.$set(this.QATable, index, this.QATable[index]); //重新加载本行数据
+      this.$set(this.QATable, this.RowUpdate, this.QATable[this.RowUpdate]); //重新加载本行数据
+      this.VisibleModify = false;
     },
     //删除问答
     deleteQABtn(row) {
@@ -418,7 +443,7 @@ export default {
         this.ShowTypeSeleted = '"' + row.Type + '"';
         this.IdSeleted.push(row.id);
       }
-      console.log("删除单词", this.IdSeleted);
+      console.log("删除知识", this.IdSeleted);
       this.VisibleDelQA = true;
     },
     deleteQA() {
@@ -451,16 +476,21 @@ export default {
         this.selectAllBtn = "全选";
       }
     },
-    testinput() {
-      console.log("输入" + this.searchText);
-      if (this.searchText === "" || this.searchText == null) {
-        return;
-      }
-      this.WordTable = this.WordTable.filter((item, index) =>
-        item.forEach(itm => itm == this.searchText)
-      );
+    // testinput() {
+    //   console.log("输入" + this.searchText);
+    //   if (this.searchText === "" || this.searchText == null) {
+    //     return;
+    //   }
+    //   this.WordTable = this.WordTable.filter((item, index) =>
+    //     item.forEach(itm => itm == this.searchText)
+    //   );
+    // },
+    testinput(){
+      this.getSearchInfo();
     },
-
+    reset(){
+      this.getQAInfo();
+    },
     input(a) {
       this.searchText = a;
     },
@@ -556,7 +586,6 @@ export default {
 .el-main {
   border: solid darkgray 1px;
 }
-
 .dialog {
   width: 50%;
   text-align: center;

@@ -21,7 +21,7 @@ console.log(ElementUI);
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI)
-axios.defaults.baseURL = 'http://39.102.46.180:8081'; // 配置axios请求的地址
+axios.defaults.baseURL = 'http://39.102.46.180:8088'; // 配置axios请求的地址
 // axios.defaults.baseURL = 'http://localhost:8081'; // 配置axios请求的地址
 //axios.defaults.headers.post["Content-Type"] = "application/json; charset=utf-8";//这是原有的配置，无法获取数据
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
