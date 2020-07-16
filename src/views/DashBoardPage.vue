@@ -2,7 +2,7 @@
    <el-container>
         <div>
         <link rel="stylesheet" href="./src/assets/css/semantic.css">
-        <div id="dashboardpage" class="ui inverted blue segment">
+        <div id="dashboard" class="ui inverted blue segment">
             <h1>用户组件</h1>
             <p>我是一个网站用户</p>
             <div class="ui divider"></div>

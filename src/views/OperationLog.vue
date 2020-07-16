@@ -5,7 +5,7 @@
             <el-row>
                 <el-col :span="18">
                     <el-breadcrumb separator="/" >
-                        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                        <el-breadcrumb-item :to="{ path: '/dasgboard' }">首页</el-breadcrumb-item>
                         <el-breadcrumb-item><a href="/">系统设置</a></el-breadcrumb-item>
                         <el-breadcrumb-item><a href="/">系统日志</a></el-breadcrumb-item>
                     </el-breadcrumb>

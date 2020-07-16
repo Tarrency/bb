@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <div v-if="$route.meta.keepAlive">
+
     <el-container >
         <el-aside>
           <left></left><!-- 侧边栏 -->
@@ -19,18 +21,26 @@
             </el-row>
             </el-header>
             <el-main><!-- 主内容区 -->
-              <router-view></router-view>
+            
+   
+　　　　　　<router-view/>
+
             </el-main>
         </el-container>
     </el-container>
+
+             
+        </div>
+     <router-view v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
 
 <script>
 import leftmenu from './views/Left.vue';
+
 export default {
   components: {
-    left: leftmenu
+     left: leftmenu
    },
    methods: {
     routerTo (val) {

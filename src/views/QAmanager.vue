@@ -3,7 +3,7 @@
     <el-container>
       <el-header>
         <el-breadcrumb separator="/">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>QA知识管理</el-breadcrumb-item>
         </el-breadcrumb>
       </el-header>
